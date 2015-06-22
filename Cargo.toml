@@ -1,0 +1,14 @@
+[package]
+name = "fann"
+version = "0.1.0"
+authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
+license = "MIT"
+description = "Bindings to the Fast Artificial Neural Networks library"
+keywords = ["neural", "network", "bindings"]
+
+[lib]
+name = "fann"
+path = "src/lib.rs"
+
+[dependencies]
+libc = "*"
