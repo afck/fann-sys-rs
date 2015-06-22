@@ -1,6 +1,3 @@
-// TODO: Remove this when not needed anymore.
-#![allow(dead_code)]
-
 extern crate libc;
 
 use std::ffi::CString;
@@ -24,7 +21,8 @@ fn test_tutorial_example() {
 
         let c_train_file = CString::new(&b"xor.data"[..]).unwrap();
         let c_save_file = CString::new(&b"xor_float.net"[..]).unwrap();
-        ffi::fann_train_on_file(ann, c_train_file.as_ptr(), max_epochs, epochs_between_reports, desired_error);
+        ffi::fann_train_on_file(
+            ann, c_train_file.as_ptr(), max_epochs, epochs_between_reports, desired_error);
 
         ffi::fann_save(ann, c_save_file.as_ptr());
 
