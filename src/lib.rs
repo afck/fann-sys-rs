@@ -1,8 +1,8 @@
 extern crate libc;
 
-use std::ffi::CString;
-
 pub mod ffi;
+
+use std::ffi::CString;
 
 #[test]
 fn test_tutorial_example() {
@@ -16,8 +16,10 @@ fn test_tutorial_example() {
         let epochs_between_reports = 1000;
         let ann = ffi::fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
 
-        ffi::fann_set_activation_function_hidden(ann, ffi::FANN_SIGMOID_SYMMETRIC);
-        ffi::fann_set_activation_function_output(ann, ffi::FANN_SIGMOID_SYMMETRIC);
+        ffi::fann_set_activation_function_hidden(
+            ann, ffi::fann_activationfunc_enum::FANN_SIGMOID_SYMMETRIC);
+        ffi::fann_set_activation_function_output(
+            ann, ffi::fann_activationfunc_enum::FANN_SIGMOID_SYMMETRIC);
 
         let c_train_file = CString::new(&b"xor.data"[..]).unwrap();
         let c_save_file = CString::new(&b"xor_float.net"[..]).unwrap();
