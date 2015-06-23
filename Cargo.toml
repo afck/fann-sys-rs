@@ -1,14 +1,13 @@
 [package]
-name = "fann"
+name = "fann-sys"
 version = "0.1.0"
 authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
 license = "MIT"
-description = "Bindings to the Fast Artificial Neural Networks library"
-keywords = ["neural", "network", "bindings"]
-
-[lib]
-name = "fann"
-path = "src/lib.rs"
+repository = "https://github.com/afck/fann-sys-rs"
+description = """
+Low-level bindings to the Fast Artificial Neural Networks library
+"""
+keywords = ["neural", "network", "fann"]
 
 [dependencies]
 libc = "*"
