@@ -319,7 +319,6 @@ pub type fann_callback_type = Option<
                   epochs: c_uint) -> c_int>;
 
 #[repr(C)]
-#[derive(Copy, Clone)]
 pub struct fann_neuron {
     first_con: c_uint,
     last_con: c_uint,
@@ -330,30 +329,19 @@ pub struct fann_neuron {
 }
 
 #[repr(C)]
-#[derive(Copy)]
 pub struct fann_layer {
     first_neuron: *mut fann_neuron,
     last_neuron: *mut fann_neuron,
 }
 
-impl ::std::clone::Clone for fann_layer {
-    fn clone(&self) -> Self { *self }
-}
-
 #[repr(C)]
-#[derive(Copy)]
 pub struct fann_error {
     errno_f: fann_errno_enum,
     error_log: *mut FILE,
     errstr: *mut c_char,
 }
 
-impl ::std::clone::Clone for fann_error {
-    fn clone(&self) -> Self { *self }
-}
-
 #[repr(C)]
-#[derive(Copy)]
 pub struct fann {
     errno_f: fann_errno_enum,
     error_log: *mut FILE,
@@ -419,24 +407,14 @@ pub struct fann {
     scale_factor_out: *mut c_float,
 }
 
-impl ::std::clone::Clone for fann {
-    fn clone(&self) -> Self { *self }
-}
-
 #[repr(C)]
-#[derive(Copy)]
 pub struct fann_connection {
     from_neuron: c_uint,
     to_neuron: c_uint,
     weight: fann_type,
 }
 
-impl ::std::clone::Clone for fann_connection {
-    fn clone(&self) -> Self { *self }
-}
-
 #[repr(C)]
-#[derive(Copy)]
 pub struct fann_train_data {
     errno_f: fann_errno_enum,
     error_log: *mut FILE,
@@ -446,10 +424,6 @@ pub struct fann_train_data {
     num_output: c_uint,
     input: *mut *mut fann_type,
     output: *mut *mut fann_type,
-}
-
-impl ::std::clone::Clone for fann_train_data {
-    fn clone(&self) -> Self { *self }
 }
 
 // TODO: Copy documentation for the remaining functions.
