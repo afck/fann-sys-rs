@@ -2,7 +2,7 @@
 name = "fann-sys"
 version = "0.1.0"
 authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
-license = "MIT"
+license = "LGPL"
 repository = "https://github.com/afck/fann-sys-rs"
 description = """
 Low-level bindings to the Fast Artificial Neural Networks library
