@@ -265,7 +265,7 @@ pub enum fann_errorfunc_enum {
     /// Standard linear error function.
 	FANN_ERRORFUNC_LINEAR = 0,
     /// Tanh error function, usually better but can require a lower learning rate. This error
-    /// function agressively targets outputs that differ much from the desired, while not targetting
+    /// function aggressively targets outputs that differ much from the desired, while not targeting
     /// outputs that only differ a little that much. This activation function is not recommended for
     /// cascade training and incremental training.
 	FANN_ERRORFUNC_TANH,
@@ -458,7 +458,7 @@ pub struct fann_connection {
 /// The data inside this structure should never be manipulated directly, but should use some
 /// of the supplied training data manipulation functions.
 ///
-/// The training data structure is very usefull for storing data during training and testing of a
+/// The training data structure is very useful for storing data during training and testing of a
 /// neural network.
 ///
 /// # See also
@@ -1033,7 +1033,7 @@ extern "C" {
     ///
     /// The steepness of an activation function says something about how fast the activation
     /// function goes from the minimum to the maximum. A high value for the activation function will
-    /// also give a more agressive training.
+    /// also give a more aggressive training.
     ///
     /// When training neural networks where the output values should be at the extremes (usually 0
     /// and 1, depending on the activation function), a steep activation function can be used (e.g.
@@ -1061,7 +1061,7 @@ extern "C" {
     ///
     /// The steepness of an activation function says something about how fast the activation
     /// function goes from the minimum to the maximum. A high value for the activation function will
-    /// also give a more agressive training.
+    /// also give a more aggressive training.
     ///
     /// When training neural networks where the output values should be at the extremes (usually 0
     /// and 1, depending on the activation function), a steep activation function can be used (e.g.
@@ -1395,7 +1395,8 @@ extern "C" {
     /// If the cascade output change fraction is low, the output connections will be trained more
     /// and if the fraction is high they will be trained less.
     ///
-    /// The default cascade output change fraction is 0.01, which is equalent to a 1% change in MSE.
+    /// The default cascade output change fraction is 0.01, which is equivalent to a 1% change in
+    /// MSE.
     ///
     /// # See also
     /// `fann_set_cascade_output_change_fraction`, `fann_get_MSE`,
@@ -1450,7 +1451,7 @@ extern "C" {
     /// If the cascade candidate change fraction is low, the candidate neurons will be trained more
     /// and if the fraction is high they will be trained less.
     ///
-    /// The default cascade candidate change fraction is 0.01, which is equalent to a 1% change in
+    /// The default cascade candidate change fraction is 0.01, which is equivalent to a 1% change in
     /// MSE.
     ///
     /// # See also
@@ -1738,7 +1739,7 @@ extern "C" {
     /// But it is saved in fixed point format no matter which
     /// format it is currently in.
     ///
-    /// This is usefull for training a network in floating points,
+    /// This is useful for training a network in floating points,
     /// and then later executing it in fixed point.
     ///
     /// The function returns the bit position of the fix point, which
@@ -1749,7 +1750,7 @@ extern "C" {
     /// A negative value indicates very low precision, and a very
     /// strong possibility for overflow.
     /// (the actual fix point will be set to 0, since a negative
-    /// fix point does not make sence).
+    /// fix point does not make sense).
     ///
     /// Generally, a fix point lower than 6 is bad, and should be avoided.
     /// The best way to avoid this, is to have less connections to each neuron,
