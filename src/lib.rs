@@ -760,7 +760,7 @@ extern "C" {
 mod tests {
     use super::*;
     use std::ffi::CString;
-    use std::fs;
+    use std::fs::remove_file;
     use std::str::from_utf8;
 
     const EPSILON: f32 = 0.1;
@@ -796,6 +796,6 @@ mod tests {
             fann_destroy(ann);
         }
         // Delete the ANN file created by the test.
-        fs::remove_file(from_utf8(c_save_file.to_bytes()).unwrap()).unwrap();
+        remove_file(from_utf8(c_save_file.to_bytes()).unwrap()).unwrap();
     }
 }
