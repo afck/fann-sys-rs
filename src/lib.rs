@@ -13,6 +13,15 @@ pub use fann_nettype_enum::*;
 use libc::types::common::c95::FILE;
 use libc::{c_char, c_float, c_int, c_uint, c_void};
 
+/// `fann_type` is the type used for the weights, inputs and outputs of the neural network. In
+/// the Rust bindings, it is currently always defined as `c_float`.
+///
+/// In the FANN C library, `fann_type` is defined as a:
+///
+/// * `float` - if you include fann.h or floatfann.h
+/// * `double` - if you include doublefann.h
+/// * `int` - if you include fixedfann.h (please be aware that fixed point usage is
+///           only to be used during execution, and not during training).
 pub type fann_type = c_float;
 
 /// Error events on fann and fann_train_data.
@@ -297,18 +306,24 @@ pub enum fann_nettype_enum {
 ///
 /// The callback function should return an integer, if the callback function returns -1, the
 /// training will terminate.
-// TODO: Translate the example to rust.
+///
+// TODO: Make the example compile!
+// Example of a callback function:
 //
-// Example of a callback function (in C):
-//
-// ```c
-// int FANN_API test_callback(struct fann *ann, struct fann_train_data *train,
-//                            unsigned int max_epochs, unsigned int epochs_between_reports,
-//                            float desired_error, unsigned int epochs)
-// {
-//  printf("Epochs     %8d. MSE: %.5f. Desired-MSE: %.5f\n", epochs, fann_get_MSE(ann), desired_error);
-//  return 0;
+// ```
+// extern crate libc;
+// use libc::*;
+// use fann_sys::*;
+// fn cb(ann: *mut fann,
+//       train: *mut fann_train_data,
+//       max_epochs: c_uint,
+//       epochs_between_reports: c_uint,
+//       desired_error: c_float,
+//       epochs: c_uint) {
+//     println!("Epochs {}. MSE: {}. Desired-MSE: {}", epochs, fann_get_MSE(ann), desired_error);
+//     0
 // }
+// let test_callback: fann_callback_type = Some(cb);
 // ```
 pub type fann_callback_type = Option<
     extern "C" fn(ann: *mut fann,
@@ -319,7 +334,7 @@ pub type fann_callback_type = Option<
                   epochs: c_uint) -> c_int>;
 
 #[repr(C)]
-pub struct fann_neuron {
+struct fann_neuron {
     first_con: c_uint,
     last_con: c_uint,
     sum: fann_type,
@@ -329,11 +344,16 @@ pub struct fann_neuron {
 }
 
 #[repr(C)]
-pub struct fann_layer {
+struct fann_layer {
     first_neuron: *mut fann_neuron,
     last_neuron: *mut fann_neuron,
 }
 
+/// Structure used to store error-related information, both
+/// `fann` and `fann_train_data` can be casted to this type.
+///
+/// # See also
+/// `fann_set_error_log`, `fann_get_errno`
 #[repr(C)]
 pub struct fann_error {
     errno_f: fann_errno_enum,
@@ -341,6 +361,16 @@ pub struct fann_error {
     errstr: *mut c_char,
 }
 
+/// The fast artificial neural network(fann) structure.
+///
+/// Data within this structure should never be accessed directly, but only by using the
+/// `fann_get_...` and `fann_set_...` functions.
+///
+/// The fann structure is created using one of the `fann_create_...` functions and each of
+/// the functions which operates on the structure takes a `fann` pointer as the first parameter.
+///
+/// # See also
+/// `fann_create_standard`, `fann_destroy`
 #[repr(C)]
 pub struct fann {
     errno_f: fann_errno_enum,
@@ -407,13 +437,32 @@ pub struct fann {
     scale_factor_out: *mut c_float,
 }
 
+/// Describes a connection between two neurons and its weight
+///
+/// # See Also
+/// `fann_get_connection_array`, `fann_set_weight_array`
+///
+/// This structure appears in FANN >= 2.1.0.
 #[repr(C)]
 pub struct fann_connection {
-    from_neuron: c_uint,
-    to_neuron: c_uint,
-    weight: fann_type,
+    /// Unique number used to identify source neuron
+    pub from_neuron: c_uint,
+    /// Unique number used to identify destination neuron
+    pub to_neuron: c_uint,
+    /// The numerical value of the weight
+    pub weight: fann_type,
 }
 
+/// Structure used to store data, for use with training.
+///
+/// The data inside this structure should never be manipulated directly, but should use some
+/// of the supplied training data manipulation functions.
+///
+/// The training data structure is very usefull for storing data during training and testing of a
+/// neural network.
+///
+/// # See also
+/// `fann_read_train_from_file`, `fann_train_on_data`, `fann_destroy_train`
 #[repr(C)]
 pub struct fann_train_data {
     errno_f: fann_errno_enum,
@@ -2072,7 +2121,7 @@ mod tests {
     use std::fs::remove_file;
     use std::str::from_utf8;
 
-    const EPSILON: f32 = 0.1;
+    const EPSILON: f32 = 0.2;
 
     #[test]
     fn test_tutorial_example() {
