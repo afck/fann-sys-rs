@@ -366,10 +366,10 @@ pub enum fann_nettype_enum {
     FANN_NETTYPE_SHORTCUT,
 }
 
-/// This callback function can be called during training when using fann_train_on_data,
-/// fann_train_on_file or fann_cascadetrain_on_data.
+/// This callback function can be called during training when using `fann_train_on_data`,
+/// `fann_train_on_file` or `fann_cascadetrain_on_data`.
 ///
-/// The callback can be set by using fann_set_callback and is very useful for doing custom
+/// The callback can be set by using `fann_set_callback` and is very useful for doing custom
 /// things during training. It is recommended to use this function when implementing custom
 /// training procedures, or when visualizing the training in a GUI etc. The parameters which the
 /// callback function takes is the parameters given to the fann_train_on_data, plus an epochs
@@ -402,13 +402,13 @@ pub enum fann_nettype_enum {
 ///     let test_callback: fann_callback_type = Some(cb);
 /// }
 /// ```
-pub type fann_callback_type = Option<
-    extern "C" fn(ann: *mut fann,
-                  train: *mut fann_train_data,
-                  max_epochs: c_uint,
-                  epochs_between_reports: c_uint,
-                  desired_error: c_float,
-                  epochs: c_uint) -> c_int>;
+pub type fann_callback_type = Option<extern "C" fn(ann: *mut fann,
+                                                   train: *mut fann_train_data,
+                                                   max_epochs: c_uint,
+                                                   epochs_between_reports: c_uint,
+                                                   desired_error: c_float,
+                                                   epochs: c_uint)
+                                     -> c_int>;
 
 #[repr(C)]
 struct fann_neuron {
