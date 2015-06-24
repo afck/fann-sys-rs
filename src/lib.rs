@@ -546,7 +546,6 @@ pub struct fann_train_data {
     output: *mut *mut fann_type,
 }
 
-// TODO: Figure out which pointers can be const.
 #[link(name = "fann")]
 extern "C" {
     pub static mut fann_default_error_log: *mut FILE;
@@ -568,7 +567,7 @@ extern "C" {
     /// Returns the last error number.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_get_errno(errdat: *mut fann_error) -> fann_errno_enum;
+    pub fn fann_get_errno(errdat: *const fann_error) -> fann_errno_enum;
 
     /// Resets the last error number.
     ///
@@ -585,7 +584,7 @@ extern "C" {
     /// This function calls fann_reset_errno and fann_reset_errstr.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_get_errstr(errdat: *mut fann_error) -> *mut c_char;
+    pub fn fann_get_errstr(errdat: *const fann_error) -> *mut c_char;
 
     /// Prints the last error to stderr.
     ///
@@ -604,16 +603,15 @@ extern "C" {
     /// `fann_get_num_output` long.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_train(ann: *mut fann, input: *mut fann_type,
-                      desired_output: *mut fann_type);
+    pub fn fann_train(ann: *mut fann, input: *const fann_type, desired_output: *const fann_type);
 
     /// Test with a set of inputs, and a set of desired outputs.
     /// This operation updates the mean square error, but does not
     /// change the network in any way.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_test(ann: *mut fann, input: *mut fann_type,
-                     desired_output: *mut fann_type) -> *mut fann_type;
+    pub fn fann_test(ann: *mut fann, input: *const fann_type,
+                     desired_output: *const fann_type) -> *mut fann_type;
 
     /// Reads the mean square error from the network.
     ///
@@ -622,7 +620,7 @@ extern "C" {
     /// have been changed since the last calculation of the value.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_get_MSE(ann: *mut fann) -> c_float;
+    pub fn fann_get_MSE(ann: *const fann) -> c_float;
 
     /// The number of fail bits; means the number of output neurons which differ more
     /// than the bit fail limit (see `fann_get_bit_fail_limit`, `fann_set_bit_fail_limit`).
@@ -633,7 +631,7 @@ extern "C" {
     ///	updates the MSE value (e.g. fann_test_data, fann_train_epoch)
     ///
     /// This function appears in FANN >= 2.0.0
-    pub fn fann_get_bit_fail(ann: *mut fann) -> c_uint;
+    pub fn fann_get_bit_fail(ann: *const fann) -> c_uint;
 
     /// Resets the mean square error from the network.
     ///
@@ -663,7 +661,7 @@ extern "C" {
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_train_on_data(ann: *mut fann,
-                              data: *mut fann_train_data,
+                              data: *const fann_train_data,
                               max_epochs: c_uint,
                               epochs_between_reports: c_uint,
                               desired_error: c_float);
@@ -691,14 +689,14 @@ extern "C" {
     /// function.
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_train_epoch(ann: *mut fann, data: *mut fann_train_data) -> c_float;
+    pub fn fann_train_epoch(ann: *mut fann, data: *const fann_train_data) -> c_float;
 
     /// Test a set of training data and calculates the MSE for the training data.
     ///
     /// This function updates the MSE and the bit fail values.
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_test_data(ann: *mut fann, data: *mut fann_train_data) -> c_float;
+    pub fn fann_test_data(ann: *mut fann, data: *const fann_train_data) -> c_float;
 
     /// Reads a file that stores training data.
     ///
@@ -740,9 +738,9 @@ extern "C" {
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_create_train_from_callback(num_data: c_uint, num_input: c_uint, num_output: c_uint,
-        user_function: Option<extern "C" fn(arg1: c_uint, arg2: c_uint, arg3: c_uint,
-                                            arg4: *mut fann_type, arg5: *mut fann_type)>)
-        -> *mut fann_train_data;
+        user_function: Option<extern "C" fn(num: c_uint, num_input: c_uint, num_output: c_uint,
+                                            input: *mut fann_type, output: *mut fann_type)>)
+        -> *const fann_train_data;
 
     /// Destructs the training data and properly deallocates all of the associated data.
     /// Be sure to call this function after finished using the training data.
@@ -897,13 +895,13 @@ extern "C" {
     /// Merges the data from `data1` and `data2` into a new `fann_train_data`.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_merge_train_data(data1: *mut fann_train_data,
-                                 data2: *mut fann_train_data) -> *mut fann_train_data;
+    pub fn fann_merge_train_data(data1: *const fann_train_data,
+                                 data2: *const fann_train_data) -> *mut fann_train_data;
 
     /// Returns an exact copy of a `struct fann_train_data`.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_duplicate_train_data(data: *mut fann_train_data) -> *mut fann_train_data;
+    pub fn fann_duplicate_train_data(data: *const fann_train_data) -> *mut fann_train_data;
 
     /// Returns an copy of a subset of the `fann_train_data`, starting at position `pos`
     /// and `length` elements forward.
@@ -915,23 +913,23 @@ extern "C" {
     /// will do the same as `fann_duplicate_train_data`.
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_subset_train_data(data: *mut fann_train_data, pos: c_uint, length: c_uint)
+    pub fn fann_subset_train_data(data: *const fann_train_data, pos: c_uint, length: c_uint)
         -> *mut fann_train_data;
 
-    /// Returns the number of training patterns in the `struct fann_train_data`.
+    /// Returns the number of training patterns in the `fann_train_data`.
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_length_train_data(data: *mut fann_train_data) -> c_uint;
+    pub fn fann_length_train_data(data: *const fann_train_data) -> c_uint;
 
     /// Returns the number of inputs in each of the training patterns in the `fann_train_data`.
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_num_input_train_data(data: *mut fann_train_data) -> c_uint;
+    pub fn fann_num_input_train_data(data: *const fann_train_data) -> c_uint;
 
     /// Returns the number of outputs in each of the training patterns in the `fann_train_data`.
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_num_output_train_data(data: *mut fann_train_data) -> c_uint;
+    pub fn fann_num_output_train_data(data: *const fann_train_data) -> c_uint;
 
     /// Save the training structure to a file, with the format as specified in
     /// `fann_read_train_from_file`
@@ -965,7 +963,7 @@ extern "C" {
     /// The default training algorithm is `FANN_TRAIN_RPROP`.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_training_algorithm(ann: *mut fann) -> fann_train_enum;
+    pub fn fann_get_training_algorithm(ann: *const fann) -> fann_train_enum;
 
     /// Set the training algorithm.
     ///
@@ -983,7 +981,7 @@ extern "C" {
     /// The default learning rate is 0.7.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_learning_rate(ann: *mut fann) -> c_float;
+    pub fn fann_get_learning_rate(ann: *const fann) -> c_float;
 
     /// Set the learning rate.
     ///
@@ -1007,7 +1005,7 @@ extern "C" {
     /// `fann_set_learning_momentum`, `fann_set_training_algorithm`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_learning_momentum(ann: *mut fann) -> c_float;
+    pub fn fann_get_learning_momentum(ann: *const fann) -> c_float;
 
     /// Set the learning momentum.
     ///
@@ -1035,7 +1033,7 @@ extern "C" {
     /// `fann_set_activation_function`
     ///
     /// This function appears in FANN >= 2.1.0.
-    pub fn fann_get_activation_function(ann: *mut fann, layer: c_int, neuron: c_int)
+    pub fn fann_get_activation_function(ann: *const fann, layer: c_int, neuron: c_int)
         -> fann_activationfunc_enum;
 
     /// Set the activation function for neuron number *neuron* in layer number `layer`,
@@ -1122,7 +1120,7 @@ extern "C" {
     /// `fann_set_activation_steepness`
     ///
     /// This function appears in FANN >= 2.1.0
-    pub fn fann_get_activation_steepness(ann: *mut fann, layer: c_int, neuron: c_int)
+    pub fn fann_get_activation_steepness(ann: *const fann, layer: c_int, neuron: c_int)
         -> fann_type;
 
     /// Set the activation steepness for neuron number *neuron* in layer number `layer`,
@@ -1191,7 +1189,7 @@ extern "C" {
     /// `fann_set_train_error_function`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_train_error_function(ann: *mut fann) -> fann_errorfunc_enum;
+    pub fn fann_get_train_error_function(ann: *const fann) -> fann_errorfunc_enum;
 
     /// Set the error function used during training.
     ///
@@ -1214,7 +1212,7 @@ extern "C" {
     /// `fann_get_train_stop_function`, `fann_get_bit_fail_limit`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_train_stop_function(ann: *mut fann) -> fann_stopfunc_enum;
+    pub fn fann_get_train_stop_function(ann: *const fann) -> fann_stopfunc_enum;
 
     /// Set the stop function used during training.
     ///
@@ -1245,7 +1243,7 @@ extern "C" {
     /// `fann_set_bit_fail_limit`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_bit_fail_limit(ann: *mut fann) -> fann_type;
+    pub fn fann_get_bit_fail_limit(ann: *const fann) -> fann_type;
 
     /// Set the bit fail limit used during training.
     ///
@@ -1274,7 +1272,7 @@ extern "C" {
     /// `fann_set_quickprop_decay`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_quickprop_decay(ann: *mut fann) -> c_float;
+    pub fn fann_get_quickprop_decay(ann: *const fann) -> c_float;
 
     /// Sets the quickprop decay factor.
     ///
@@ -1294,7 +1292,7 @@ extern "C" {
     /// `fann_set_quickprop_mu`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_quickprop_mu(ann: *mut fann) -> c_float;
+    pub fn fann_get_quickprop_mu(ann: *const fann) -> c_float;
 
     /// Sets the quickprop mu factor.
     ///
@@ -1313,7 +1311,7 @@ extern "C" {
     /// `fann_set_rprop_increase_factor`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_rprop_increase_factor(ann: *mut fann) -> c_float;
+    pub fn fann_get_rprop_increase_factor(ann: *const fann) -> c_float;
 
     /// The increase factor used during RPROP training.
     ///
@@ -1332,7 +1330,7 @@ extern "C" {
     /// `fann_set_rprop_decrease_factor`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_rprop_decrease_factor(ann: *mut fann) -> c_float;
+    pub fn fann_get_rprop_decrease_factor(ann: *const fann) -> c_float;
 
     /// The decrease factor is a value smaller than 1, which is used to decrease the step-size
     /// during RPROP training.
@@ -1352,7 +1350,7 @@ extern "C" {
     /// `fann_set_rprop_delta_min`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_rprop_delta_min(ann: *mut fann) -> c_float;
+    pub fn fann_get_rprop_delta_min(ann: *const fann) -> c_float;
 
     /// The minimum step-size is a small positive number determining how small the minimum step-size
     /// may be.
@@ -1372,7 +1370,7 @@ extern "C" {
     /// `fann_set_rprop_delta_max`, `fann_get_rprop_delta_min`
     ///
     /// This function appears in FANN >= 1.2.0.
-    pub fn fann_get_rprop_delta_max(ann: *mut fann) -> c_float;
+    pub fn fann_get_rprop_delta_max(ann: *const fann) -> c_float;
 
     /// The maximum step-size is a positive number determining how large the maximum step-size may
     /// be.
@@ -1391,7 +1389,7 @@ extern "C" {
     /// `fann_set_rprop_delta_zero`, `fann_get_rprop_delta_min`, `fann_get_rprop_delta_max`
     ///
     /// This function appears in FANN >= 2.1.0.
-    pub fn fann_get_rprop_delta_zero(ann: *mut fann) -> c_float;
+    pub fn fann_get_rprop_delta_zero(ann: *const fann) -> c_float;
 
     /// The initial step-size is a positive number determining the initial step size.
     ///
@@ -1434,7 +1432,7 @@ extern "C" {
     ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_cascadetrain_on_data(ann: *mut fann,
-                                     data: *mut fann_train_data,
+                                     data: *const fann_train_data,
                                      max_neurons: c_uint,
                                      neurons_between_reports: c_uint,
                                      desired_error: c_float);
@@ -1474,7 +1472,7 @@ extern "C" {
     /// `fann_get_cascade_output_stagnation_epochs`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_output_change_fraction(ann: *mut fann) -> c_float;
+    pub fn fann_get_cascade_output_change_fraction(ann: *const fann) -> c_float;
 
     /// Sets the cascade output change fraction.
     ///
@@ -1497,7 +1495,7 @@ extern "C" {
     /// `fann_set_cascade_output_stagnation_epochs`, `fann_get_cascade_output_change_fraction`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_output_stagnation_epochs(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_output_stagnation_epochs(ann: *const fann) -> c_uint;
 
     /// Sets the number of cascade output stagnation epochs.
     ///
@@ -1530,7 +1528,7 @@ extern "C" {
     /// `fann_get_cascade_candidate_stagnation_epochs`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_candidate_change_fraction(ann: *mut fann) -> c_float;
+    pub fn fann_get_cascade_candidate_change_fraction(ann: *const fann) -> c_float;
 
     /// Sets the cascade candidate change fraction.
     ///
@@ -1553,7 +1551,7 @@ extern "C" {
     /// `fann_set_cascade_candidate_stagnation_epochs`, `fann_get_cascade_candidate_change_fraction`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_candidate_stagnation_epochs(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_candidate_stagnation_epochs(ann: *const fann) -> c_uint;
 
     /// Sets the number of cascade candidate stagnation epochs.
     ///
@@ -1574,7 +1572,7 @@ extern "C" {
     /// `fann_set_cascade_weight_multiplier`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_weight_multiplier(ann: *mut fann) -> fann_type;
+    pub fn fann_get_cascade_weight_multiplier(ann: *const fann) -> fann_type;
 
     /// Sets the weight multiplier.
     ///
@@ -1597,7 +1595,7 @@ extern "C" {
     /// `fann_set_cascade_candidate_limit`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_candidate_limit(ann: *mut fann) -> fann_type;
+    pub fn fann_get_cascade_candidate_limit(ann: *const fann) -> fann_type;
 
     /// Sets the candidate limit.
     ///
@@ -1617,7 +1615,7 @@ extern "C" {
     /// `fann_set_cascade_max_out_epochs`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_max_out_epochs(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_max_out_epochs(ann: *const fann) -> c_uint;
 
     /// Sets the maximum out epochs.
     ///
@@ -1636,7 +1634,7 @@ extern "C" {
     /// `fann_set_cascade_max_cand_epochs`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_max_cand_epochs(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_max_cand_epochs(ann: *const fann) -> c_uint;
 
     /// Sets the max candidate epochs.
     ///
@@ -1670,7 +1668,7 @@ extern "C" {
     /// `fann_get_cascade_num_candidate_groups`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_num_candidates(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_num_candidates(ann: *const fann) -> c_uint;
 
     /// The number of activation functions in the `fann_get_cascade_activation_functions` array.
     ///
@@ -1680,7 +1678,7 @@ extern "C" {
     /// `fann_get_cascade_activation_functions`, `fann_set_cascade_activation_functions`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_activation_functions_count(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_activation_functions_count(ann: *const fann) -> c_uint;
 
     /// The cascade activation functions array is an array of the different activation functions
     /// used by the candidates.
@@ -1696,7 +1694,7 @@ extern "C" {
     /// `fann_activationfunc_enum`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_activation_functions(ann: *mut fann) -> *mut fann_activationfunc_enum;
+    pub fn fann_get_cascade_activation_functions(ann: *const fann) -> *mut fann_activationfunc_enum;
 
     /// Sets the array of cascade candidate activation functions. The array must be just as long
     /// as defined by the count.
@@ -1720,7 +1718,7 @@ extern "C" {
     /// `fann_get_cascade_activation_steepnesses`, `fann_set_cascade_activation_functions`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_activation_steepnesses_count(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_activation_steepnesses_count(ann: *const fann) -> c_uint;
 
     /// The cascade activation steepnesses array is an array of the different activation functions
     /// used by the candidates.
@@ -1734,7 +1732,7 @@ extern "C" {
     /// `fann_set_cascade_activation_steepnesses`, `fann_get_cascade_activation_steepnesses_count`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_activation_steepnesses(ann: *mut fann) -> *mut fann_type;
+    pub fn fann_get_cascade_activation_steepnesses(ann: *const fann) -> *mut fann_type;
 
     /// Sets the array of cascade candidate activation steepnesses. The array must be just as long
     /// as defined by the count.
@@ -1765,7 +1763,7 @@ extern "C" {
     /// `fann_set_cascade_num_candidate_groups`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_num_candidate_groups(ann: *mut fann) -> c_uint;
+    pub fn fann_get_cascade_num_candidate_groups(ann: *const fann) -> c_uint;
 
     /// Sets the number of candidate groups.
     ///
@@ -2026,23 +2024,23 @@ extern "C" {
     /// Get the number of input neurons.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_num_input(ann: *mut fann) -> c_uint;
+    pub fn fann_get_num_input(ann: *const fann) -> c_uint;
 
     /// Get the number of output neurons.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_num_output(ann: *mut fann) -> c_uint;
+    pub fn fann_get_num_output(ann: *const fann) -> c_uint;
 
     /// Get the total number of neurons in the entire network. This number does also include the
     /// bias neurons, so a 2-4-2 network has 2+4+2 +2(bias) = 10 neurons.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_total_neurons(ann: *mut fann) -> c_uint;
+    pub fn fann_get_total_neurons(ann: *const fann) -> c_uint;
 
     /// Get the total number of connections in the entire network.
     ///
     /// This function appears in FANN >= 1.0.0.
-    pub fn fann_get_total_connections(ann: *mut fann) -> c_uint;
+    pub fn fann_get_total_connections(ann: *const fann) -> c_uint;
 
     /// Get the type of neural network it was created as.
     ///
@@ -2057,7 +2055,7 @@ extern "C" {
     /// `fann_network_type_enum`
     ///
     /// This function appears in FANN >= 2.1.0
-    pub fn fann_get_network_type(ann: *mut fann) -> fann_nettype_enum;
+    pub fn fann_get_network_type(ann: *const fann) -> fann_nettype_enum;
 
     /// Get the connection rate used when the network was created.
     ///
@@ -2069,7 +2067,7 @@ extern "C" {
     /// The connection rate
     ///
     /// This function appears in FANN >= 2.1.0
-    pub fn fann_get_connection_rate(ann: *mut fann) -> c_float;
+    pub fn fann_get_connection_rate(ann: *const fann) -> c_float;
 
     /// Get the number of layers in the network.
     ///
@@ -2091,7 +2089,7 @@ extern "C" {
     /// ```
     ///
     /// This function appears in FANN >= 2.1.0
-    pub fn fann_get_num_layers(ann: *mut fann) -> c_uint;
+    pub fn fann_get_num_layers(ann: *const fann) -> c_uint;
 
     /// Get the number of neurons in each layer in the network.
     ///
@@ -2104,7 +2102,7 @@ extern "C" {
     /// The layers array must be preallocated to accommodate at least `fann_num_layers` items.
     ///
     /// This function appears in FANN >= 2.1.0.
-    pub fn fann_get_layer_array(ann: *mut fann, layers: *mut c_uint);
+    pub fn fann_get_layer_array(ann: *const fann, layers: *mut c_uint);
 
     /// Get the number of bias in each layer in the network.
     ///
@@ -2115,7 +2113,7 @@ extern "C" {
     /// The bias array must be preallocated to accommodate at least `fann_num_layers` items.
     ///
     /// This function appears in FANN >= 2.1.0.
-    pub fn fann_get_bias_array(ann: *mut fann, bias: *mut c_uint);
+    pub fn fann_get_bias_array(ann: *const fann, bias: *mut c_uint);
 
     /// Get the connections in the network.
     ///
@@ -2127,7 +2125,7 @@ extern "C" {
     /// `fann_get_total_connections` items.
     ///
     /// This function appears in FANN >= 2.1.0.
-    pub fn fann_get_connection_array(ann: *mut fann, connections: *mut fann_connection);
+    pub fn fann_get_connection_array(ann: *const fann, connections: *mut fann_connection);
 
     /// Set connections in the network.
     ///
