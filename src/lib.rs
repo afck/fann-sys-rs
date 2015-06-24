@@ -49,7 +49,7 @@
 //!
 //! # File Input/Output
 //!
-//! It is possible to save an entire ann to a file with <fann_save> for future loading with
+//! It is possible to save an entire ann to a file with `fann_save` for future loading with
 //! `fann_create_from_file`.
 //!
 //!
@@ -100,43 +100,43 @@ pub type fann_type = c_float;
 #[derive(Copy, Clone)]
 pub enum fann_errno_enum {
     /// No error
-	FANN_E_NO_ERROR = 0,
+    FANN_E_NO_ERROR = 0,
     /// Unable to open configuration file for reading
-	FANN_E_CANT_OPEN_CONFIG_R,
-	/// Unable to open configuration file for writing
-	FANN_E_CANT_OPEN_CONFIG_W,
+    FANN_E_CANT_OPEN_CONFIG_R,
+    /// Unable to open configuration file for writing
+    FANN_E_CANT_OPEN_CONFIG_W,
     /// Wrong version of configuration file
-	FANN_E_WRONG_CONFIG_VERSION,
-	/// Error reading info from configuration file
-	FANN_E_CANT_READ_CONFIG,
-	/// Error reading neuron info from configuration file
-	FANN_E_CANT_READ_NEURON,
-	/// Error reading connections from configuration file
-	FANN_E_CANT_READ_CONNECTIONS,
-	/// Number of connections not equal to the number expected
-	FANN_E_WRONG_NUM_CONNECTIONS,
-	/// Unable to open train data file for writing
-	FANN_E_CANT_OPEN_TD_W,
-	/// Unable to open train data file for reading
-	FANN_E_CANT_OPEN_TD_R,
-	/// Error reading training data from file
-	FANN_E_CANT_READ_TD,
-	/// Unable to allocate memory
-	FANN_E_CANT_ALLOCATE_MEM,
-	/// Unable to train with the selected activation function
-	FANN_E_CANT_TRAIN_ACTIVATION,
-	/// Unable to use the selected activation function
-	FANN_E_CANT_USE_ACTIVATION,
-	/// Irreconcilable differences between two fann_train_data structures
-	FANN_E_TRAIN_DATA_MISMATCH,
-	/// Unable to use the selected training algorithm
-	FANN_E_CANT_USE_TRAIN_ALG,
-	/// Trying to take subset which is not within the training set
-	FANN_E_TRAIN_DATA_SUBSET,
-	/// Index is out of bound
-	FANN_E_INDEX_OUT_OF_BOUND,
-	/// Scaling parameters not present
-	FANN_E_SCALE_NOT_PRESENT,
+    FANN_E_WRONG_CONFIG_VERSION,
+    /// Error reading info from configuration file
+    FANN_E_CANT_READ_CONFIG,
+    /// Error reading neuron info from configuration file
+    FANN_E_CANT_READ_NEURON,
+    /// Error reading connections from configuration file
+    FANN_E_CANT_READ_CONNECTIONS,
+    /// Number of connections not equal to the number expected
+    FANN_E_WRONG_NUM_CONNECTIONS,
+    /// Unable to open train data file for writing
+    FANN_E_CANT_OPEN_TD_W,
+    /// Unable to open train data file for reading
+    FANN_E_CANT_OPEN_TD_R,
+    /// Error reading training data from file
+    FANN_E_CANT_READ_TD,
+    /// Unable to allocate memory
+    FANN_E_CANT_ALLOCATE_MEM,
+    /// Unable to train with the selected activation function
+    FANN_E_CANT_TRAIN_ACTIVATION,
+    /// Unable to use the selected activation function
+    FANN_E_CANT_USE_ACTIVATION,
+    /// Irreconcilable differences between two fann_train_data structures
+    FANN_E_TRAIN_DATA_MISMATCH,
+    /// Unable to use the selected training algorithm
+    FANN_E_CANT_USE_TRAIN_ALG,
+    /// Trying to take subset which is not within the training set
+    FANN_E_TRAIN_DATA_SUBSET,
+    /// Index is out of bound
+    FANN_E_INDEX_OUT_OF_BOUND,
+    /// Scaling parameters not present
+    FANN_E_SCALE_NOT_PRESENT,
 }
 
 /// The Training algorithms used when training on fann_train_data with functions like
@@ -146,18 +146,18 @@ pub enum fann_errno_enum {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_train_enum {
-	/// Standard backpropagation algorithm, where the weights are
+    /// Standard backpropagation algorithm, where the weights are
     /// updated after each training pattern. This means that the weights are updated many
     /// times during a single epoch. For this reason some problems, will train very fast with
     /// this algorithm, while other more advanced problems will not train very well.
-	FANN_TRAIN_INCREMENTAL = 0,
-	/// Standard backpropagation algorithm, where the weights are updated after calculating the mean
+    FANN_TRAIN_INCREMENTAL = 0,
+    /// Standard backpropagation algorithm, where the weights are updated after calculating the mean
     /// square error for the whole training set. This means that the weights are only updated once
     /// during a epoch. For this reason some problems, will train slower with this algorithm. But
     /// since the mean square error is calculated more correctly than in incremental training, some
     /// problems will reach a better solutions with this algorithm.
-	FANN_TRAIN_BATCH,
-	/// A more advanced batch training algorithm which achieves good results
+    FANN_TRAIN_BATCH,
+    /// A more advanced batch training algorithm which achieves good results
     /// for many problems. The RPROP training algorithm is adaptive, and does therefore not
     /// use the learning_rate. Some other parameters can however be set to change the way the
     /// RPROP algorithm works, but it is only recommended for users with insight in how the RPROP
@@ -171,7 +171,7 @@ pub enum fann_train_enum {
     /// along with other more advanced parameters, but it is only recommended to change these
     /// advanced parameters, for users with insight in how the quickprop training algorithm works.
     /// The quickprop training algorithm is described by [Fahlman, 1988].
-	FANN_TRAIN_QUICKPROP,
+    FANN_TRAIN_QUICKPROP,
 }
 
 /// The activation functions used for the neurons during training. The activation functions
@@ -202,19 +202,19 @@ pub enum fann_activationfunc_enum {
     /// * y = x*s, d = 1*s
     ///
     /// * Can NOT be used in fixed point.
-	FANN_LINEAR = 0,
+    FANN_LINEAR = 0,
     /// Threshold activation function.
     ///
     /// * x < 0 -> y = 0, x >= 0 -> y = 1
     ///
     /// * Can NOT be used during training.
-	FANN_THRESHOLD,
+    FANN_THRESHOLD,
     /// Threshold activation function.
     ///
     /// * x < 0 -> y = 0, x >= 0 -> y = 1
     ///
     /// * Can NOT be used during training.
-	FANN_THRESHOLD_SYMMETRIC,
+    FANN_THRESHOLD_SYMMETRIC,
     /// Sigmoid activation function.
     ///
     /// * One of the most used activation functions.
@@ -224,11 +224,11 @@ pub enum fann_activationfunc_enum {
     /// * y = 1/(1 + exp(-2*s*x))
     ///
     /// * d = 2*s*y*(1 - y)
-	FANN_SIGMOID,
+    FANN_SIGMOID,
     /// Stepwise linear approximation to sigmoid.
     ///
     /// * Faster than sigmoid but a bit less precise.
-	FANN_SIGMOID_STEPWISE,
+    FANN_SIGMOID_STEPWISE,
     /// Symmetric sigmoid activation function, aka. tanh.
     ///
     /// * One of the most used activation functions.
@@ -238,11 +238,11 @@ pub enum fann_activationfunc_enum {
     /// * y = tanh(s*x) = 2/(1 + exp(-2*s*x)) - 1
     ///
     /// * d = s*(1-(y*y))
-	FANN_SIGMOID_SYMMETRIC,
+    FANN_SIGMOID_SYMMETRIC,
     /// Stepwise linear approximation to symmetric sigmoid.
     ///
     /// * Faster than symmetric sigmoid but a bit less precise.
-	FANN_SIGMOID_SYMMETRIC_STEPWISE,
+    FANN_SIGMOID_SYMMETRIC_STEPWISE,
     /// Gaussian activation function.
     ///
     /// * 0 when x = -inf, 1 when x = 0 and 0 when x = inf
@@ -252,7 +252,7 @@ pub enum fann_activationfunc_enum {
     /// * y = exp(-x*s*x*s)
     ///
     /// * d = -2*x*s*y*s
-	FANN_GAUSSIAN,
+    FANN_GAUSSIAN,
     /// Symmetric gaussian activation function.
     ///
     /// * -1 when x = -inf, 1 when x = 0 and 0 when x = inf
@@ -262,11 +262,11 @@ pub enum fann_activationfunc_enum {
     /// * y = exp(-x*s*x*s)*2-1
     ///
     /// * d = -2*x*s*(y+1)*s
-	FANN_GAUSSIAN_SYMMETRIC,
+    FANN_GAUSSIAN_SYMMETRIC,
     /// Stepwise linear approximation to gaussian.
     /// Faster than gaussian but a bit less precise.
     /// NOT implemented yet.
-	FANN_GAUSSIAN_STEPWISE,
+    FANN_GAUSSIAN_STEPWISE,
     /// Fast (sigmoid like) activation function defined by David Elliott
     ///
     /// * span: 0 < y < 1
@@ -274,7 +274,7 @@ pub enum fann_activationfunc_enum {
     /// * y = ((x*s) / 2) / (1 + |x*s|) + 0.5
     ///
     /// * d = s*1/(2*(1+|x*s|)*(1+|x*s|))
-	FANN_ELLIOT,
+    FANN_ELLIOT,
     /// Fast (symmetric sigmoid like) activation function defined by David Elliott
     ///
     /// * span: -1 < y < 1
@@ -282,19 +282,19 @@ pub enum fann_activationfunc_enum {
     /// * y = (x*s) / (1 + |x*s|)
     ///
     /// * d = s*1/((1+|x*s|)*(1+|x*s|))
-	FANN_ELLIOT_SYMMETRIC,
+    FANN_ELLIOT_SYMMETRIC,
     /// Bounded linear activation function.
     ///
     /// * span: 0 <= y <= 1
     ///
     /// * y = x*s, d = 1*s
-	FANN_LINEAR_PIECE,
+    FANN_LINEAR_PIECE,
     /// Bounded linear activation function.
     ///
     /// * span: -1 <= y <= 1
     ///
     /// * y = x*s, d = 1*s
-	FANN_LINEAR_PIECE_SYMMETRIC,
+    FANN_LINEAR_PIECE_SYMMETRIC,
     /// Periodical sinus activation function.
     ///
     /// * span: -1 <= y <= 1
@@ -302,7 +302,7 @@ pub enum fann_activationfunc_enum {
     /// * y = sin(x*s)
     ///
     /// * d = s*cos(x*s)
-	FANN_SIN_SYMMETRIC,
+    FANN_SIN_SYMMETRIC,
     /// Periodical cosinus activation function.
     ///
     /// * span: -1 <= y <= 1
@@ -310,7 +310,7 @@ pub enum fann_activationfunc_enum {
     /// * y = cos(x*s)
     ///
     /// * d = s*-sin(x*s)
-	FANN_COS_SYMMETRIC,
+    FANN_COS_SYMMETRIC,
     /// Periodical sinus activation function.
     ///
     /// * span: 0 <= y <= 1
@@ -318,7 +318,7 @@ pub enum fann_activationfunc_enum {
     /// * y = sin(x*s)/2+0.5
     ///
     /// * d = s*cos(x*s)/2
-	FANN_SIN,
+    FANN_SIN,
     /// Periodical cosinus activation function.
     ///
     /// * span: 0 <= y <= 1
@@ -326,37 +326,37 @@ pub enum fann_activationfunc_enum {
     /// * y = cos(x*s)/2+0.5
     ///
     /// * d = s*-sin(x*s)/2
-	FANN_COS,
+    FANN_COS,
 }
 
-///	Error function used during training.
+///    Error function used during training.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_errorfunc_enum {
     /// Standard linear error function.
-	FANN_ERRORFUNC_LINEAR = 0,
+    FANN_ERRORFUNC_LINEAR = 0,
     /// Tanh error function, usually better but can require a lower learning rate. This error
     /// function aggressively targets outputs that differ much from the desired, while not targeting
     /// outputs that only differ a little that much. This activation function is not recommended for
     /// cascade training and incremental training.
-	FANN_ERRORFUNC_TANH,
+    FANN_ERRORFUNC_TANH,
 }
 
 /// Stop criteria used during training.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_stopfunc_enum {
-	/// Stop criteria is Mean Square Error (MSE) value.
-	FANN_STOPFUNC_MSE = 0,
-	/// Stop criteria is number of bits that fail. The number of bits; means the
+    /// Stop criteria is Mean Square Error (MSE) value.
+    FANN_STOPFUNC_MSE = 0,
+    /// Stop criteria is number of bits that fail. The number of bits; means the
     /// number of output neurons which differ more than the bit fail limit
     /// (see fann_get_bit_fail_limit, fann_set_bit_fail_limit).
     /// The bits are counted in all of the training data, so this number can be higher than
     /// the number of training data.
-	FANN_STOPFUNC_BIT,
+    FANN_STOPFUNC_BIT,
 }
 
-/// Definition of network types used by <fann_get_network_type>
+/// Definition of network types used by `fann_get_network_type`
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_nettype_enum {
@@ -647,9 +647,9 @@ extern "C" {
     /// than the bit fail limit (see `fann_get_bit_fail_limit`, `fann_set_bit_fail_limit`).
     /// The bits are counted in all of the training data, so this number can be higher than
     /// the number of training data.
-	///
+    ///
     /// This value is reset by fann_reset_MSE and updated by all the same functions which also
-    ///	updates the MSE value (e.g. fann_test_data, fann_train_epoch)
+    ///    updates the MSE value (e.g. fann_test_data, fann_train_epoch)
     ///
     /// # See also
     /// `fann_stopfunc_enum`, `fann_get_MSE`
@@ -2051,11 +2051,11 @@ extern "C" {
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_destroy(ann: *mut fann);
 
-    ///	Will run input through the neural network, returning an array of outputs, the number of
-    ///	which being equal to the number of neurons in the output layer.
+    ///    Will run input through the neural network, returning an array of outputs, the number of
+    ///    which being equal to the number of neurons in the output layer.
     ///
     /// # See also
-    ///	`fann_test`
+    ///    `fann_test`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_run(ann: *mut fann, input: *const fann_type) -> *mut fann_type;
