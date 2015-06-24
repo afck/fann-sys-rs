@@ -4,10 +4,11 @@ version = "0.1.0"
 authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
 license = "LGPL"
 repository = "https://github.com/afck/fann-sys-rs"
+readme = "README.md"
 description = """
 Low-level bindings to the Fast Artificial Neural Networks library
 """
 keywords = ["neural", "network", "fann"]
 
 [dependencies]
-libc = "*"
+libc = "0.1.8"
