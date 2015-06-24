@@ -3,6 +3,7 @@ name = "fann-sys"
 version = "0.1.0"
 authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
 license = "LGPL"
+documentation = "https://afck.github.io/docs/fann-sys-rs/fann_sys"
 repository = "https://github.com/afck/fann-sys-rs"
 readme = "README.md"
 description = """
