@@ -378,24 +378,30 @@ pub enum fann_nettype_enum {
 /// The callback function should return an integer, if the callback function returns -1, the
 /// training will terminate.
 ///
-// TODO: Make the example compile!
-// Example of a callback function:
-//
-// ```
-// extern crate libc;
-// use libc::*;
-// use fann_sys::*;
-// fn cb(ann: *mut fann,
-//       train: *mut fann_train_data,
-//       max_epochs: c_uint,
-//       epochs_between_reports: c_uint,
-//       desired_error: c_float,
-//       epochs: c_uint) {
-//     println!("Epochs {}. MSE: {}. Desired-MSE: {}", epochs, fann_get_MSE(ann), desired_error);
-//     0
-// }
-// let test_callback: fann_callback_type = Some(cb);
-// ```
+/// Example of a callback function:
+///
+/// ```
+/// extern crate libc;
+/// extern crate fann_sys;
+///
+/// use libc::*;
+/// use fann_sys::*;
+///
+/// extern "C" fn cb(ann: *mut fann,
+///                  train: *mut fann_train_data,
+///                  max_epochs: c_uint,
+///                  epochs_between_reports: c_uint,
+///                  desired_error: c_float,
+///                  epochs: c_uint) -> c_int {
+///     let mut mse = unsafe { fann_get_MSE(ann) };
+///     println!("Epochs {}. MSE: {}. Desired-MSE: {}", epochs, mse, desired_error);
+///     0
+/// }
+///
+/// fn main() {
+///     let test_callback: fann_callback_type = Some(cb);
+/// }
+/// ```
 pub type fann_callback_type = Option<
     extern "C" fn(ann: *mut fann,
                   train: *mut fann_train_data,
