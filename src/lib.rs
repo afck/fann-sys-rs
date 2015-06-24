@@ -567,10 +567,16 @@ extern "C" {
     ///
     /// The default behavior is to log them to stderr.
     ///
+    /// # See also
+    /// `fann_error`
+    ///
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_set_error_log(errdat: *mut fann_error, log_file: *mut FILE);
 
     /// Returns the last error number.
+    ///
+    /// # See also
+    /// `fann_errno_enum`, `fann_reset_errno`
     ///
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_get_errno(errdat: *const fann_error) -> fann_errno_enum;
@@ -608,12 +614,18 @@ extern "C" {
     /// * `desired_output` - an array of desired outputs. This array must be exactly
     /// `fann_get_num_output` long.
     ///
+    /// # See also
+    /// `fann_train_on_data`, `fann_train_epoch`
+    ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_train(ann: *mut fann, input: *const fann_type, desired_output: *const fann_type);
 
     /// Test with a set of inputs, and a set of desired outputs.
     /// This operation updates the mean square error, but does not
     /// change the network in any way.
+    ///
+    /// # See also
+    /// `fann_test_data`, `fann_train`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_test(ann: *mut fann, input: *const fann_type,
@@ -624,6 +636,9 @@ extern "C" {
     /// Reads the mean square error from the network. This value is calculated during
     /// training or testing, and can therefore sometimes be a bit off if the weights
     /// have been changed since the last calculation of the value.
+    ///
+    /// # See also
+    /// `fann_test_data`
     ///
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_get_MSE(ann: *const fann) -> c_float;
@@ -636,12 +651,18 @@ extern "C" {
     /// This value is reset by fann_reset_MSE and updated by all the same functions which also
     ///	updates the MSE value (e.g. fann_test_data, fann_train_epoch)
     ///
+    /// # See also
+    /// `fann_stopfunc_enum`, `fann_get_MSE`
+    ///
     /// This function appears in FANN >= 2.0.0
     pub fn fann_get_bit_fail(ann: *const fann) -> c_uint;
 
     /// Resets the mean square error from the network.
     ///
     /// This function also resets the number of bits that fail.
+    ///
+    /// # See also
+    /// `fann_get_bit_fail_limit`, `fann_get_MSE`
     ///
     /// This function appears in FANN >= 1.1.0
     pub fn fann_reset_MSE(ann: *mut fann);
@@ -665,6 +686,9 @@ extern "C" {
     /// Instead of printing out reports every epochs_between_reports, a callback function can be
     /// called (see `fann_set_callback`).
     ///
+    /// # See also
+    /// `fann_train_on_file`, `fann_train_epoch`
+    ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_train_on_data(ann: *mut fann,
                               data: *const fann_train_data,
@@ -673,6 +697,9 @@ extern "C" {
                               desired_error: c_float);
 
     /// Does the same as `fann_train_on_data`, but reads the training data directly from a file.
+    ///
+    /// # See also
+    /// `fann_train_on_data`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_train_on_file(ann: *mut fann,
@@ -694,12 +721,18 @@ extern "C" {
     /// The training algorithm used by this function is chosen by the `fann_set_training_algorithm`
     /// function.
     ///
+    /// # See also
+    /// `fann_train_on_data`, `fann_test_data`
+    ///
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_train_epoch(ann: *mut fann, data: *const fann_train_data) -> c_float;
 
     /// Test a set of training data and calculates the MSE for the training data.
     ///
     /// This function updates the MSE and the bit fail values.
+    ///
+    /// # See also
+    /// `fann_test`, `fann_get_MSE`, `fann_get_bit_fail`
     ///
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_test_data(ann: *mut fann, data: *const fann_train_data) -> c_float;
@@ -718,6 +751,9 @@ extern "C" {
     /// inputdata separated by space
     /// outputdata separated by space
     /// ```
+    ///
+    /// # See also
+    /// `fann_train_on_data`, `fann_destroy_train`, `fann_save_train`
     ///
     /// This function appears in FANN >= 1.0.0
     pub fn fann_read_train_from_file(filename: *const c_char) -> *mut fann_train_data;
@@ -741,6 +777,9 @@ extern "C" {
     ///  * `num_output` - The number of ouputs per training data
     ///  * `input`      - The set of inputs
     ///  * `output`     - The set of desired outputs
+    ///
+    /// # See also
+    /// `fann_read_train_from_file`, `fann_train_on_data`, `fann_destroy_train`, `fann_save_train`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_create_train_from_callback(num_data: c_uint, num_input: c_uint, num_output: c_uint,
@@ -768,6 +807,9 @@ extern "C" {
     /// * `ann`      - ann for which were calculated trained parameters before
     /// * `data`     - training data that needs to be scaled
     ///
+    /// # See also
+    /// `fann_descale_train`, `fann_set_scaling_params`
+    ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_scale_train(ann: *mut fann, data: *mut fann_train_data);
 
@@ -777,6 +819,9 @@ extern "C" {
     ///
     /// * `ann`      - ann for which were calculated trained parameters before
     /// * `data`     - training data that needs to be descaled
+    ///
+    /// # See also
+    /// `fann_scale_train`, `fann_set_scaling_params`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_descale_train(ann: *mut fann, data: *mut fann_train_data);
@@ -789,6 +834,9 @@ extern "C" {
     /// * `data`          - training data that will be used to calculate scaling parameters
     /// * `new_input_min` - desired lower bound in input data after scaling (not strictly followed)
     /// * `new_input_max` - desired upper bound in input data after scaling (not strictly followed)
+    ///
+    /// # See also
+    /// `fann_set_output_scaling_params`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_set_input_scaling_params(ann: *mut fann,
@@ -804,6 +852,9 @@ extern "C" {
     /// * `data`           - training data that will be used to calculate scaling parameters
     /// * `new_output_min` - desired lower bound in input data after scaling (not strictly followed)
     /// * `new_output_max` - desired upper bound in input data after scaling (not strictly followed)
+    ///
+    /// # See also
+    /// `fann_set_input_scaling_params`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_set_output_scaling_params(ann: *mut fann,
@@ -822,6 +873,8 @@ extern "C" {
     /// * `new_output_min` - desired lower bound in input data after scaling (not strictly followed)
     /// * `new_output_max` - desired upper bound in input data after scaling (not strictly followed)
     ///
+    /// # See also
+    /// `fann_set_input_scaling_params`, `fann_set_output_scaling_params`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_set_scaling_params(ann: *mut fann,
@@ -847,6 +900,9 @@ extern "C" {
     /// `ann`          - for which scaling parameters were calculated
     /// `input_vector` - input vector that will be scaled
     ///
+    /// # See also
+    /// `fann_descale_input`, `fann_scale_output`
+    ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_scale_input(ann: *mut fann, input_vector: *mut fann_type);
 
@@ -856,6 +912,9 @@ extern "C" {
     ///
     /// * `ann`           - for which scaling parameters were calculated
     /// * `output_vector` - output vector that will be scaled
+    ///
+    /// # See also
+    /// `fann_descale_output`, `fann_scale_intput`
     ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_scale_output(ann: *mut fann, output_vector: *mut fann_type);
@@ -867,6 +926,9 @@ extern "C" {
     /// * `ann`          - for which scaling parameters were calculated
     /// * `input_vector` - input vector that will be descaled
     ///
+    /// # See also
+    /// `fann_scale_input`, `fann_descale_output`
+    ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_descale_input(ann: *mut fann, input_vector: *mut fann_type);
 
@@ -877,10 +939,16 @@ extern "C" {
     /// * `ann`           - for which scaling parameters were calculated
     /// * `output_vector` - output vector that will be descaled
     ///
+    /// # See also
+    /// `fann_descale_input`, `fann_scale_output`
+    ///
     /// This function appears in FANN >= 2.1.0
     pub fn fann_descale_output(ann: *mut fann, output_vector: *mut fann_type);
 
     /// Scales the inputs in the training data to the specified range.
+    ///
+    /// # See also
+    /// `fann_scale_output_train_data`, `fann_scale_train_data`
     ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_scale_input_train_data(train_data: *mut fann_train_data,
@@ -888,11 +956,17 @@ extern "C" {
 
     /// Scales the outputs in the training data to the specified range.
     ///
+    /// # See also
+    /// `fann_scale_input_train_data`, `fann_scale_train_data`
+    ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_scale_output_train_data(train_data: *mut fann_train_data,
                                         new_min: fann_type, new_max: fann_type);
 
     /// Scales the inputs and outputs in the training data to the specified range.
+    ///
+    /// # See also
+    /// `fann_scale_output_train_data`, `fann_scale_input_train_data`
     ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_scale_train_data(train_data: *mut fann_train_data,
@@ -918,6 +992,9 @@ extern "C" {
     ///
     /// will do the same as `fann_duplicate_train_data`.
     ///
+    /// # See also
+    /// `fann_length_train_data`
+    ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_subset_train_data(data: *const fann_train_data, pos: c_uint, length: c_uint)
         -> *mut fann_train_data;
@@ -929,10 +1006,16 @@ extern "C" {
 
     /// Returns the number of inputs in each of the training patterns in the `fann_train_data`.
     ///
+    /// # See also
+    /// `fann_num_train_data`, `fann_num_output_train_data`
+    ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_num_input_train_data(data: *const fann_train_data) -> c_uint;
 
     /// Returns the number of outputs in each of the training patterns in the `fann_train_data`.
+    ///
+    /// # See also
+    /// `fann_num_train_data`, `fann_num_input_train_data`
     ///
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_num_output_train_data(data: *const fann_train_data) -> c_uint;
@@ -944,6 +1027,9 @@ extern "C" {
     ///
     /// The function returns 0 on success and -1 on failure.
     ///
+    /// # See also
+    /// `fann_read_train_from_file`, `fann_save_train_to_fixed`
+    ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_save_train(data: *mut fann_train_data, filename: *const c_char) -> c_int;
 
@@ -954,6 +1040,9 @@ extern "C" {
     /// # Return
     ///
     /// The function returns 0 on success and -1 on failure.
+    ///
+    /// # See also
+    /// `fann_save_train`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_save_train_to_fixed(data: *mut fann_train_data,
@@ -967,6 +1056,9 @@ extern "C" {
     /// `FANN_TRAIN_RPROP` and `FANN_TRAIN_QUICKPROP` is allowed during cascade training.
     ///
     /// The default training algorithm is `FANN_TRAIN_RPROP`.
+    ///
+    /// # See also
+    /// `fann_set_training_algorithm`, `fann_train_enum`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_get_training_algorithm(ann: *const fann) -> fann_train_enum;
@@ -986,6 +1078,9 @@ extern "C" {
     ///
     /// The default learning rate is 0.7.
     ///
+    /// # See also
+    /// `fann_set_learning_rate`, `fann_set_training_algorithm`
+    ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_get_learning_rate(ann: *const fann) -> c_float;
 
@@ -995,8 +1090,6 @@ extern "C" {
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_set_learning_rate(ann: *mut fann, learning_rate: c_float);
-
-    // TODO: Add "See also" sections to the documentation up to here.
 
     /// Get the learning momentum.
     ///
