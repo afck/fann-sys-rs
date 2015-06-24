@@ -1,5 +1,76 @@
 //! Raw bindings to C functions of the Fast Artificial Neural Network library
+//!
+//!
+//! # Creation/Execution
+//!
+//! The FANN library is designed to be very easy to use.
+//! A feedforward ANN can be created by a simple `fann_create_standard` function, while
+//! other ANNs can be created just as easily. The ANNs can be trained by `fann_train_on_file`
+//! and executed by `fann_run`.
+//!
+//! All of this can be done without much knowledge of the internals of ANNs, although the ANNs
+//! created will still be powerful and effective. If you have more knowledge about ANNs, and desire
+//! more control, almost every part of the ANNs can be parametized to create specialized and highly
+//! optimal ANNs.
+//!
+//!
+//! # Training
+//!
+//! There are many different ways of training neural networks and the FANN library supports
+//! a number of different approaches.
+//!
+//! Two fundementally different approaches are the most commonly used:
+//!
+//! * Fixed topology training - The size and topology of the ANN is determined in advance
+//! and the training alters the weights in order to minimize the difference between
+//! the desired output values and the actual output values. This kind of training is
+//! supported by `fann_train_on_data`.
+//!
+//! * Evolving topology training - The training start out with an empty ANN, only consisting
+//! of input and output neurons. Hidden neurons and connections is the added during training,
+//! in order to reach the same goal as for fixed topology training. This kind of training
+//! is supported by FANN Cascade Training.
+//!
+//!
+//! # Cascade Training
+//!
+//! Cascade training differs from ordinary training in the sense that it starts with an empty neural
+//! network and then adds neurons one by one, while it trains the neural network. The main benefit
+//! of this approach, is that you do not have to guess the number of hidden layers and neurons prior
+//! to training, but cascade training have also proved better at solving some problems.
+//!
+//! The basic idea of cascade training is that a number of candidate neurons are trained separate
+//! from the real network, then the most promissing of these candidate neurons is inserted into the
+//! neural network. Then the output connections are trained and new candidate neurons is prepared.
+//! The candidate neurons are created as shorcut connected neurons in a new hidden layer, which
+//! means that the final neural network will consist of a number of hidden layers with one shortcut
+//! connected neuron in each.
+//!
+//!
+//! # File Input/Output
+//!
+//! It is possible to save an entire ann to a file with <fann_save> for future loading with
+//! `fann_create_from_file`.
+//!
+//!
+//! # Error Handling
+//!
+//! Errors from the fann library are usually reported on `stderr`.
+//! It is however possible to redirect these error messages to a file,
+//! or completely ignore them by the `fann_set_error_log` function.
+//!
+//! It is also possible to inspect the last error message by using the
+//! `fann_get_errno` and `fann_get_errstr` functions.
+//!
+//!
+//! # Datatypes
+//!
+//! The two main datatypes used in the fann library is `struct fann`,
+//! which represents an artificial neural network, and `struct fann_train_data`,
+//! which represent training data.
 #![allow(non_camel_case_types)]
+
+// TODO: Cross-link the documentation.
 
 extern crate libc;
 
@@ -350,7 +421,7 @@ struct fann_layer {
 }
 
 /// Structure used to store error-related information, both
-/// `fann` and `fann_train_data` can be casted to this type.
+/// `fann` and `fann_train_data` can be cast to this type.
 ///
 /// # See also
 /// `fann_set_error_log`, `fann_get_errno`
@@ -481,7 +552,7 @@ extern "C" {
     pub static mut fann_default_error_log: *mut FILE;
 
     /// Change where errors are logged to. Both fann and fann_data can be
-    /// casted to fann_error, so this function can be used to set either of these.
+    /// cast to fann_error, so this function can be used to set either of these.
     ///
     /// If log_file is NULL, no errors will be printed.
     ///
