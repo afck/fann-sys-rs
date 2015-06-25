@@ -10,7 +10,7 @@
 //!
 //! All of this can be done without much knowledge of the internals of ANNs, although the ANNs
 //! created will still be powerful and effective. If you have more knowledge about ANNs, and desire
-//! more control, almost every part of the ANNs can be parametized to create specialized and highly
+//! more control, almost every part of the ANNs can be parametrized to create specialized and highly
 //! optimal ANNs.
 //!
 //!
@@ -27,8 +27,8 @@
 //! supported by `fann_train_on_data`.
 //!
 //! * Evolving topology training - The training start out with an empty ANN, only consisting
-//! of input and output neurons. Hidden neurons and connections is the added during training,
-//! in order to reach the same goal as for fixed topology training. This kind of training
+//! of input and output neurons. Hidden neurons and connections are added during training,
+//! in order to achieve the same goal as for fixed topology training. This kind of training
 //! is supported by FANN Cascade Training.
 //!
 //!
@@ -36,13 +36,13 @@
 //!
 //! Cascade training differs from ordinary training in the sense that it starts with an empty neural
 //! network and then adds neurons one by one, while it trains the neural network. The main benefit
-//! of this approach, is that you do not have to guess the number of hidden layers and neurons prior
-//! to training, but cascade training have also proved better at solving some problems.
+//! of this approach is that you do not have to guess the number of hidden layers and neurons prior
+//! to training, but cascade training has also proved better at solving some problems.
 //!
 //! The basic idea of cascade training is that a number of candidate neurons are trained separate
-//! from the real network, then the most promissing of these candidate neurons is inserted into the
-//! neural network. Then the output connections are trained and new candidate neurons is prepared.
-//! The candidate neurons are created as shorcut connected neurons in a new hidden layer, which
+//! from the real network, then the most promising of these candidate neurons is inserted into the
+//! neural network. Then the output connections are trained and new candidate neurons are prepared.
+//! The candidate neurons are created as shortcut connected neurons in a new hidden layer, which
 //! means that the final neural network will consist of a number of hidden layers with one shortcut
 //! connected neuron in each.
 //!
@@ -55,9 +55,9 @@
 //!
 //! # Error Handling
 //!
-//! Errors from the fann library are usually reported on `stderr`.
+//! Errors from the FANN library are usually reported on `stderr`.
 //! It is however possible to redirect these error messages to a file,
-//! or completely ignore them by the `fann_set_error_log` function.
+//! or completely ignore them with the `fann_set_error_log` function.
 //!
 //! It is also possible to inspect the last error message by using the
 //! `fann_get_errno` and `fann_get_errstr` functions.
@@ -65,9 +65,9 @@
 //!
 //! # Datatypes
 //!
-//! The two main datatypes used in the fann library is `struct fann`,
-//! which represents an artificial neural network, and `struct fann_train_data`,
-//! which represent training data.
+//! The two main datatypes used in the FANN library are `fann`,
+//! which represents an artificial neural network, and `fann_train_data`,
+//! which represents training data.
 #![allow(non_camel_case_types)]
 
 // TODO: Cross-link the documentation.
@@ -127,7 +127,7 @@ pub enum fann_errno_enum {
     FANN_E_CANT_TRAIN_ACTIVATION,
     /// Unable to use the selected activation function
     FANN_E_CANT_USE_ACTIVATION,
-    /// Irreconcilable differences between two fann_train_data structures
+    /// Irreconcilable differences between two `fann_train_data` structures
     FANN_E_TRAIN_DATA_MISMATCH,
     /// Unable to use the selected training algorithm
     FANN_E_CANT_USE_TRAIN_ALG,
@@ -139,8 +139,8 @@ pub enum fann_errno_enum {
     FANN_E_SCALE_NOT_PRESENT,
 }
 
-/// The Training algorithms used when training on fann_train_data with functions like
-/// fann_train_on_data or fann_train_on_file. The incremental training looks alters the weights
+/// The Training algorithms used when training on `fann_train_data` with functions like
+/// `fann_train_on_data` or `fann_train_on_file`. The incremental training alters the weights
 /// after each time it is presented an input pattern, while batch only alters the weights once after
 /// it has been presented to all the patterns.
 #[repr(C)]
@@ -148,18 +148,18 @@ pub enum fann_errno_enum {
 pub enum fann_train_enum {
     /// Standard backpropagation algorithm, where the weights are
     /// updated after each training pattern. This means that the weights are updated many
-    /// times during a single epoch. For this reason some problems, will train very fast with
+    /// times during a single epoch. For this reason some problems will train very fast with
     /// this algorithm, while other more advanced problems will not train very well.
     FANN_TRAIN_INCREMENTAL = 0,
     /// Standard backpropagation algorithm, where the weights are updated after calculating the mean
     /// square error for the whole training set. This means that the weights are only updated once
-    /// during a epoch. For this reason some problems, will train slower with this algorithm. But
+    /// during an epoch. For this reason some problems will train slower with this algorithm. But
     /// since the mean square error is calculated more correctly than in incremental training, some
-    /// problems will reach a better solutions with this algorithm.
+    /// problems will reach better solutions with this algorithm.
     FANN_TRAIN_BATCH,
     /// A more advanced batch training algorithm which achieves good results
     /// for many problems. The RPROP training algorithm is adaptive, and does therefore not
-    /// use the learning_rate. Some other parameters can however be set to change the way the
+    /// use the `learning_rate`. Some other parameters can however be set to change the way the
     /// RPROP algorithm works, but it is only recommended for users with insight in how the RPROP
     /// training algorithm works. The RPROP training algorithm is described by
     /// [Riedmiller and Braun, 1993], but the actual learning algorithm used here is the
@@ -167,21 +167,21 @@ pub enum fann_train_enum {
     /// is an variety of the standard RPROP training algorithm.
     FANN_TRAIN_RPROP,
     /// A more advanced batch training algorithm which achieves good results
-    /// for many problems. The quickprop training algorithm uses the learning_rate parameter
+    /// for many problems. The quickprop training algorithm uses the `learning_rate` parameter
     /// along with other more advanced parameters, but it is only recommended to change these
-    /// advanced parameters, for users with insight in how the quickprop training algorithm works.
+    /// advanced parameters for users with insight in how the quickprop training algorithm works.
     /// The quickprop training algorithm is described by [Fahlman, 1988].
     FANN_TRAIN_QUICKPROP,
 }
 
 /// The activation functions used for the neurons during training. The activation functions
-/// can either be defined for a group of neurons by fann_set_activation_function_hidden and
-/// fann_set_activation_function_output or it can be defined for a single neuron by
-/// fann_set_activation_function.
+/// can either be defined for a group of neurons by `fann_set_activation_function_hidden` and
+/// `fann_set_activation_function_output`, or it can be defined for a single neuron by
+/// `fann_set_activation_function`.
 ///
 /// The steepness of an activation function is defined in the same way by
-/// fann_set_activation_steepness_hidden, fann_set_activation_steepness_output and
-/// fann_set_activation_steepness.
+/// `fann_set_activation_steepness_hidden`, `fann_set_activation_steepness_output` and
+/// `fann_set_activation_steepness`.
 ///
 /// The functions are described with functions where:
 ///
@@ -274,7 +274,7 @@ pub enum fann_activationfunc_enum {
     /// * y = ((x*s) / 2) / (1 + |x*s|) + 0.5
     ///
     /// * d = s*1/(2*(1+|x*s|)*(1+|x*s|))
-    FANN_ELLIOT,
+    FANN_ELLIOTT,
     /// Fast (symmetric sigmoid like) activation function defined by David Elliott
     ///
     /// * span: -1 < y < 1
@@ -282,7 +282,7 @@ pub enum fann_activationfunc_enum {
     /// * y = (x*s) / (1 + |x*s|)
     ///
     /// * d = s*1/((1+|x*s|)*(1+|x*s|))
-    FANN_ELLIOT_SYMMETRIC,
+    FANN_ELLIOTT_SYMMETRIC,
     /// Bounded linear activation function.
     ///
     /// * span: 0 <= y <= 1
@@ -295,7 +295,7 @@ pub enum fann_activationfunc_enum {
     ///
     /// * y = x*s, d = 1*s
     FANN_LINEAR_PIECE_SYMMETRIC,
-    /// Periodical sinus activation function.
+    /// Periodical sine activation function.
     ///
     /// * span: -1 <= y <= 1
     ///
@@ -303,7 +303,7 @@ pub enum fann_activationfunc_enum {
     ///
     /// * d = s*cos(x*s)
     FANN_SIN_SYMMETRIC,
-    /// Periodical cosinus activation function.
+    /// Periodical cosine activation function.
     ///
     /// * span: -1 <= y <= 1
     ///
@@ -311,7 +311,7 @@ pub enum fann_activationfunc_enum {
     ///
     /// * d = s*-sin(x*s)
     FANN_COS_SYMMETRIC,
-    /// Periodical sinus activation function.
+    /// Periodical sine activation function.
     ///
     /// * span: 0 <= y <= 1
     ///
@@ -319,7 +319,7 @@ pub enum fann_activationfunc_enum {
     ///
     /// * d = s*cos(x*s)/2
     FANN_SIN,
-    /// Periodical cosinus activation function.
+    /// Periodical cosine activation function.
     ///
     /// * span: 0 <= y <= 1
     ///
@@ -329,7 +329,7 @@ pub enum fann_activationfunc_enum {
     FANN_COS,
 }
 
-///    Error function used during training.
+/// Error function used during training.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_errorfunc_enum {
@@ -346,9 +346,9 @@ pub enum fann_errorfunc_enum {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_stopfunc_enum {
-    /// Stop criteria is Mean Square Error (MSE) value.
+    /// Stop criterion is Mean Square Error (MSE) value.
     FANN_STOPFUNC_MSE = 0,
-    /// Stop criteria is number of bits that fail. The number of bits; means the
+    /// Stop criterion is number of bits that fail. The number of bits means the
     /// number of output neurons which differ more than the bit fail limit
     /// (see fann_get_bit_fail_limit, fann_set_bit_fail_limit).
     /// The bits are counted in all of the training data, so this number can be higher than
@@ -356,13 +356,13 @@ pub enum fann_stopfunc_enum {
     FANN_STOPFUNC_BIT,
 }
 
-/// Definition of network types used by `fann_get_network_type`
+/// Definition of network types used by `fann_get_network_type`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_nettype_enum {
-    /// Each layer only has connections to the next layer
+    /// Each layer only has connections to the next layer.
     FANN_NETTYPE_LAYER = 0,
-    /// Each layer has connections to all following layers
+    /// Each layer has connections to all following layers.
     FANN_NETTYPE_SHORTCUT,
 }
 
@@ -372,8 +372,8 @@ pub enum fann_nettype_enum {
 /// The callback can be set by using `fann_set_callback` and is very useful for doing custom
 /// things during training. It is recommended to use this function when implementing custom
 /// training procedures, or when visualizing the training in a GUI etc. The parameters which the
-/// callback function takes is the parameters given to the fann_train_on_data, plus an epochs
-/// parameter which tells how many epochs the training have taken so far.
+/// callback function takes are the parameters given to `fann_train_on_data`, plus an `epochs`
+/// parameter which tells how many epochs the training has taken so far.
 ///
 /// The callback function should return an integer, if the callback function returns -1, the
 /// training will terminate.
@@ -394,7 +394,7 @@ pub enum fann_nettype_enum {
 ///                  desired_error: c_float,
 ///                  epochs: c_uint) -> c_int {
 ///     let mut mse = unsafe { fann_get_MSE(ann) };
-///     println!("Epochs {}. MSE: {}. Desired-MSE: {}", epochs, mse, desired_error);
+///     println!("Epochs: {}. MSE: {}. Desired MSE: {}", epochs, mse, desired_error);
 ///     0
 /// }
 ///
@@ -438,7 +438,7 @@ pub struct fann_error {
     errstr: *mut c_char,
 }
 
-/// The fast artificial neural network(fann) structure.
+/// The fast artificial neural network (`fann`) structure.
 ///
 /// Data within this structure should never be accessed directly, but only by using the
 /// `fann_get_...` and `fann_set_...` functions.
@@ -514,7 +514,7 @@ pub struct fann {
     scale_factor_out: *mut c_float,
 }
 
-/// Describes a connection between two neurons and its weight
+/// Describes a connection between two neurons and its weight.
 ///
 /// # See Also
 /// `fann_get_connection_array`, `fann_set_weight_array`
@@ -556,16 +556,16 @@ pub struct fann_train_data {
 extern "C" {
     pub static mut fann_default_error_log: *mut FILE;
 
-    /// Change where errors are logged to. Both fann and fann_data can be
-    /// cast to fann_error, so this function can be used to set either of these.
+    /// Change where errors are logged to. Both `fann` and `fann_data` can be
+    /// cast to `fann_error`, so this function can be used to set either of these.
     ///
-    /// If log_file is NULL, no errors will be printed.
+    /// If `log_file` is NULL, no errors will be printed.
     ///
-    /// If errdata is NULL, the default log will be set. The default log is the log used when
-    /// creating fann and fann_data. This default log will also be the default for all new structs
-    /// that are created.
+    /// If `errdat` is NULL, the default log will be set. The default log is the log used when
+    /// creating `fann` and `fann_data`. This default log will also be the default for all new
+    /// structs that are created.
     ///
-    /// The default behavior is to log them to stderr.
+    /// The default behavior is to log them to `stderr`.
     ///
     /// # See also
     /// `fann_error`
@@ -591,14 +591,14 @@ extern "C" {
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_reset_errstr(errdat: *mut fann_error);
 
-    /// Returns the last errstr.
+    /// Returns the last error string.
     ///
-    /// This function calls fann_reset_errno and fann_reset_errstr.
+    /// This function calls `fann_reset_errno` and `fann_reset_errstr`.
     ///
     /// This function appears in FANN >= 1.1.0.
-    pub fn fann_get_errstr(errdat: *const fann_error) -> *mut c_char;
+    pub fn fann_get_errstr(errdat: *mut fann_error) -> *mut c_char;
 
-    /// Prints the last error to stderr.
+    /// Prints the last error to `stderr`.
     ///
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_print_error(errdat: *mut fann_error);
@@ -612,7 +612,7 @@ extern "C" {
     /// * `ann` - The neural network structure
     /// * `input` - an array of inputs. This array must be exactly `fann_get_num_input` long.
     /// * `desired_output` - an array of desired outputs. This array must be exactly
-    /// `fann_get_num_output` long.
+    ///     `fann_get_num_output` long.
     ///
     /// # See also
     /// `fann_train_on_data`, `fann_train_epoch`
@@ -633,7 +633,7 @@ extern "C" {
 
     /// Reads the mean square error from the network.
     ///
-    /// Reads the mean square error from the network. This value is calculated during
+    /// This value is calculated during
     /// training or testing, and can therefore sometimes be a bit off if the weights
     /// have been changed since the last calculation of the value.
     ///
@@ -648,8 +648,8 @@ extern "C" {
     /// The bits are counted in all of the training data, so this number can be higher than
     /// the number of training data.
     ///
-    /// This value is reset by fann_reset_MSE and updated by all the same functions which also
-    ///    updates the MSE value (e.g. fann_test_data, fann_train_epoch)
+    /// This value is reset by `fann_reset_MSE` and updated by all the same functions which also
+    /// update the MSE value (e.g. `fann_test_data`, `fann_train_epoch`)
     ///
     /// # See also
     /// `fann_stopfunc_enum`, `fann_get_MSE`
@@ -669,21 +669,20 @@ extern "C" {
 
     /// Trains on an entire dataset, for a period of time.
     ///
-    ///
     /// This training uses the training algorithm chosen by `fann_set_training_algorithm`,
     /// and the parameters set for these training algorithms.
     ///
     /// # Parameters
     ///
-    /// * `ann` - The neural network
-    /// * `data` - The data, which should be used during training
-    /// * `max_epochs` - The maximum number of epochs the training should continue
-    /// * `epochs_between_reports` - The number of epochs between printing a status report to stdout.
-    /// A value of zero means no reports should be printed.
-    /// * `desired_error` - The desired `fann_get_MSE` or `fann_get_bit_fail`, depending on which
-    /// stop function is chosen by `fann_set_train_stop_function`.
+    /// * `ann`                    - The neural network
+    /// * `data`                   - The data that should be used during training
+    /// * `max_epochs`             - The maximum number of epochs the training should continue
+    /// * `epochs_between_reports` - The number of epochs between printing a status report to
+    ///     `stdout`. A value of zero means no reports should be printed.
+    /// * `desired_error`          - The desired `fann_get_MSE` or `fann_get_bit_fail`, depending on
+    ///     which stop function is chosen by `fann_set_train_stop_function`.
     ///
-    /// Instead of printing out reports every epochs_between_reports, a callback function can be
+    /// Instead of printing out reports every `epochs_between_reports`, a callback function can be
     /// called (see `fann_set_callback`).
     ///
     /// # See also
@@ -710,7 +709,7 @@ extern "C" {
 
     /// Train one epoch with a set of training data.
     ///
-    /// Train one epoch with the training data stored in data. One epoch is where all of
+    /// Train one epoch with the training data stored in `data`. One epoch is where all of
     /// the training data is considered exactly once.
     ///
     /// This function returns the MSE error as it is calculated either before or during
@@ -788,13 +787,13 @@ extern "C" {
         -> *const fann_train_data;
 
     /// Destructs the training data and properly deallocates all of the associated data.
-    /// Be sure to call this function after finished using the training data.
+    /// Be sure to call this function when finished using the training data.
     ///
     /// This function appears in FANN >= 1.0.0
     pub fn fann_destroy_train(train_data: *mut fann_train_data);
 
     /// Shuffles training data, randomizing the order.
-    /// This is recommended for incremental training, while it have no influence during batch
+    /// This is recommended for incremental training, while it has no influence during batch
     /// training.
     ///
     /// This function appears in FANN >= 1.1.0.
@@ -804,7 +803,7 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann`      - ann for which were calculated trained parameters before
+    /// * `ann`      - ANN for which trained parameters were calculated before
     /// * `data`     - training data that needs to be scaled
     ///
     /// # See also
@@ -817,7 +816,7 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann`      - ann for which were calculated trained parameters before
+    /// * `ann`      - ann for which trained parameters were calculated before
     /// * `data`     - training data that needs to be descaled
     ///
     /// # See also
@@ -830,7 +829,7 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann`           - ann for wgich parameters needs to be calculated
+    /// * `ann`           - ANN for which parameters need to be calculated
     /// * `data`          - training data that will be used to calculate scaling parameters
     /// * `new_input_min` - desired lower bound in input data after scaling (not strictly followed)
     /// * `new_input_max` - desired upper bound in input data after scaling (not strictly followed)
@@ -848,10 +847,12 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann`            - ann for wgich parameters needs to be calculated
+    /// * `ann`            - ANN for which parameters need to be calculated
     /// * `data`           - training data that will be used to calculate scaling parameters
-    /// * `new_output_min` - desired lower bound in input data after scaling (not strictly followed)
-    /// * `new_output_max` - desired upper bound in input data after scaling (not strictly followed)
+    /// * `new_output_min` - desired lower bound in output data after scaling (not strictly
+    ///     followed)
+    /// * `new_output_max` - desired upper bound in output data after scaling (not strictly
+    ///     followed)
     ///
     /// # See also
     /// `fann_set_input_scaling_params`
@@ -866,12 +867,14 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann`            - ann for wgich parameters needs to be calculated
+    /// * `ann`            - ANN for which parameters need to be calculated
     /// * `data`           - training data that will be used to calculate scaling parameters
     /// * `new_input_min`  - desired lower bound in input data after scaling (not strictly followed)
     /// * `new_input_max`  - desired upper bound in input data after scaling (not strictly followed)
-    /// * `new_output_min` - desired lower bound in input data after scaling (not strictly followed)
-    /// * `new_output_max` - desired upper bound in input data after scaling (not strictly followed)
+    /// * `new_output_min` - desired lower bound in output data after scaling (not strictly
+    ///     followed)
+    /// * `new_output_max` - desired upper bound in output data after scaling (not strictly
+    ///     followed)
     ///
     /// # See also
     /// `fann_set_input_scaling_params`, `fann_set_output_scaling_params`
@@ -893,7 +896,8 @@ extern "C" {
     /// This function appears in FANN >= 2.1.0
     pub fn fann_clear_scaling_params(ann: *mut fann) -> c_int;
 
-    /// Scale data in input vector before feed it to ann based on previously calculated parameters.
+    /// Scale data in input vector before feeding it to the ANN based on previously calculated
+    /// parameters.
     ///
     /// # Parameters
     ///
@@ -906,7 +910,8 @@ extern "C" {
     /// This function appears in FANN >= 2.1.0
     pub fn fann_scale_input(ann: *mut fann, input_vector: *mut fann_type);
 
-    /// Scale data in output vector before feed it to ann based on previously calculated parameters.
+    /// Scale data in output vector before feeding it to the ANN based on previously calculated
+    /// parameters.
     ///
     /// # Parameters
     ///
@@ -919,7 +924,8 @@ extern "C" {
     /// This function appears in FANN >= 2.1.0
     pub fn fann_scale_output(ann: *mut fann, output_vector: *mut fann_type);
 
-    /// Scale data in input vector after get it from ann based on previously calculated parameters.
+    /// Scale data in input vector after getting it from the ANN based on previously calculated
+    /// parameters.
     ///
     /// # Parameters
     ///
@@ -932,7 +938,8 @@ extern "C" {
     /// This function appears in FANN >= 2.1.0
     pub fn fann_descale_input(ann: *mut fann, input_vector: *mut fann_type);
 
-    /// Scale data in output vector after get it from ann based on previously calculated parameters.
+    /// Scale data in output vector after getting it from the ANN based on previously calculated
+    /// parameters.
     ///
     /// # Parameters
     ///
@@ -978,7 +985,7 @@ extern "C" {
     pub fn fann_merge_train_data(data1: *const fann_train_data,
                                  data2: *const fann_train_data) -> *mut fann_train_data;
 
-    /// Returns an exact copy of a `struct fann_train_data`.
+    /// Returns an exact copy of a `fann_train_data`.
     ///
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_duplicate_train_data(data: *const fann_train_data) -> *mut fann_train_data;
@@ -1020,7 +1027,7 @@ extern "C" {
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_num_output_train_data(data: *const fann_train_data) -> c_uint;
 
-    /// Save the training structure to a file, with the format as specified in
+    /// Save the training structure to a file, with the format specified in
     /// `fann_read_train_from_file`
     ///
     /// # Return
@@ -1113,7 +1120,7 @@ extern "C" {
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_set_learning_momentum(ann: *mut fann, learning_momentum: c_float);
 
-    /// Get the activation function for neuron number *neuron* in layer number `layer`,
+    /// Get the activation function for neuron number `neuron` in layer number `layer`,
     /// counting the input layer as layer 0.
     ///
     /// It is not possible to get activation functions for the neurons in the input layer.
@@ -1135,14 +1142,14 @@ extern "C" {
     pub fn fann_get_activation_function(ann: *const fann, layer: c_int, neuron: c_int)
         -> fann_activationfunc_enum;
 
-    /// Set the activation function for neuron number *neuron* in layer number `layer`,
+    /// Set the activation function for neuron number `neuron` in layer number `layer`,
     /// counting the input layer as layer 0.
     ///
     /// It is not possible to set activation functions for the neurons in the input layer.
     ///
     /// When choosing an activation function it is important to note that the activation
     /// functions have different range. `FANN_SIGMOID` is e.g. in the 0 - 1 range while
-    /// `FANN_SIGMOID_SYMMETRIC` is in the -1 - 1 range and `FANN_LINEAR` is unbound.
+    /// `FANN_SIGMOID_SYMMETRIC` is in the -1 - 1 range and `FANN_LINEAR` is unbounded.
     ///
     /// Information about the individual activation functions is available at
     /// `fann_activationfunc_enum`.
@@ -1194,7 +1201,7 @@ extern "C" {
     pub fn fann_set_activation_function_output(ann: *mut fann,
                                                activation_function: fann_activationfunc_enum);
 
-    /// Get the activation steepness for neuron number *neuron* in layer number `layer`,
+    /// Get the activation steepness for neuron number `neuron` in layer number `layer`,
     /// counting the input layer as layer 0.
     ///
     /// It is not possible to get activation steepness for the neurons in the input layer.
@@ -1222,7 +1229,7 @@ extern "C" {
     pub fn fann_get_activation_steepness(ann: *const fann, layer: c_int, neuron: c_int)
         -> fann_type;
 
-    /// Set the activation steepness for neuron number *neuron* in layer number `layer`,
+    /// Set the activation steepness for neuron number `neuron` in layer number `layer`,
     /// counting the input layer as layer 0.
     ///
     /// It is not possible to set activation steepness for the neurons in the input layer.
@@ -1248,7 +1255,7 @@ extern "C" {
                                          layer: c_int,
                                          neuron: c_int);
 
-    /// Set the activation steepness all of the neurons in layer number `layer`,
+    /// Set the activation steepness for all neurons in layer number `layer`,
     /// counting the input layer as layer 0.
     ///
     /// It is not possible to set activation steepness for the neurons in the input layer.
@@ -1280,7 +1287,7 @@ extern "C" {
 
     /// Returns the error function used during training.
     ///
-    /// The error functions is described further in `fann_errorfunc_enum`.
+    /// The error functions are described further in `fann_errorfunc_enum`.
     ///
     /// The default error function is `FANN_ERRORFUNC_TANH`
     ///
@@ -1292,7 +1299,7 @@ extern "C" {
 
     /// Set the error function used during training.
     ///
-    /// The error functions is described further in `fann_errorfunc_enum`.
+    /// The error functions are described further in `fann_errorfunc_enum`.
     ///
     /// # See also
     /// `fann_get_train_error_function`
@@ -1381,9 +1388,9 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_set_quickprop_decay(ann: *mut fann, quickprop_decay: c_float);
 
-    /// The mu factor is used to increase and decrease the step-size during quickprop training.
-    /// The mu factor should always be above 1, since it would otherwise decrease the step-size
-    /// when it was suppose to increase it.
+    /// The mu factor is used to increase and decrease the step size during quickprop training.
+    /// The mu factor should always be above 1, since it would otherwise decrease the step size
+    /// when it was supposed to increase it.
     ///
     /// The default mu factor is 1.75.
     ///
@@ -1402,7 +1409,7 @@ extern "C" {
     pub fn fann_set_quickprop_mu(ann: *mut fann, quickprop_mu: c_float);
 
     /// The increase factor is a value larger than 1, which is used to
-    /// increase the step-size during RPROP training.
+    /// increase the step size during RPROP training.
     ///
     /// The default increase factor is 1.2.
     ///
@@ -1420,7 +1427,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_set_rprop_increase_factor(ann: *mut fann, rprop_increase_factor: c_float);
 
-    /// The decrease factor is a value smaller than 1, which is used to decrease the step-size
+    /// The decrease factor is a value smaller than 1, which is used to decrease the step size
     /// during RPROP training.
     ///
     /// The default decrease factor is 0.5.
@@ -1431,7 +1438,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_get_rprop_decrease_factor(ann: *const fann) -> c_float;
 
-    /// The decrease factor is a value smaller than 1, which is used to decrease the step-size
+    /// The decrease factor is a value smaller than 1, which is used to decrease the step size
     /// during RPROP training.
     ///
     /// # See also
@@ -1440,7 +1447,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_set_rprop_decrease_factor(ann: *mut fann, rprop_decrease_factor: c_float);
 
-    /// The minimum step-size is a small positive number determining how small the minimum step-size
+    /// The minimum step size is a small positive number determining how small the minimum step size
     /// may be.
     ///
     /// The default value delta min is 0.0.
@@ -1451,7 +1458,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_get_rprop_delta_min(ann: *const fann) -> c_float;
 
-    /// The minimum step-size is a small positive number determining how small the minimum step-size
+    /// The minimum step size is a small positive number determining how small the minimum step size
     /// may be.
     ///
     /// # See also
@@ -1460,7 +1467,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_set_rprop_delta_min(ann: *mut fann, rprop_delta_min: c_float);
 
-    /// The maximum step-size is a positive number determining how large the maximum step-size may
+    /// The maximum step size is a positive number determining how large the maximum step size may
     /// be.
     ///
     /// The default delta max is 50.0.
@@ -1471,7 +1478,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_get_rprop_delta_max(ann: *const fann) -> c_float;
 
-    /// The maximum step-size is a positive number determining how large the maximum step-size may
+    /// The maximum step size is a positive number determining how large the maximum step size may
     /// be.
     ///
     /// # See also
@@ -1480,7 +1487,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_set_rprop_delta_max(ann: *mut fann, rprop_delta_max: c_float);
 
-    /// The initial step-size is a positive number determining the initial step size.
+    /// The initial step size is a positive number determining the initial step size.
     ///
     /// The default delta zero is 0.1.
     ///
@@ -1490,7 +1497,7 @@ extern "C" {
     /// This function appears in FANN >= 2.1.0.
     pub fn fann_get_rprop_delta_zero(ann: *const fann) -> c_float;
 
-    /// The initial step-size is a positive number determining the initial step size.
+    /// The initial step size is a positive number determining the initial step size.
     ///
     /// # See also
     /// `fann_get_rprop_delta_zero`, `fann_get_rprop_delta_zero`
@@ -1509,19 +1516,20 @@ extern "C" {
     ///                                fann_num_output_train_data(train_data));
     /// ```
     ///
-    /// This training uses the parameters set using the `fann_set_cascade_...`, but it also uses
+    /// This training uses the parameters set using `fann_set_cascade_...`, but it also uses
     /// another training algorithm as it's internal training algorithm. This algorithm can be set to
     /// either `FANN_TRAIN_RPROP` or `FANN_TRAIN_QUICKPROP` by `fann_set_training_algorithm`, and
     /// the parameters set for these training algorithms will also affect the cascade training.
     ///
     /// # Parameters
-    /// * `ann` - The neural network
-    /// * `data` - The data, which should be used during training
-    /// * `max_neuron` - The maximum number of neurons to be added to neural network
+    ///
+    /// * `ann`                     - The neural network
+    /// * `data`                    - The data that should be used during training
+    /// * `max_neuron`              - The maximum number of neurons to be added to the ANN
     /// * `neurons_between_reports` - The number of neurons between printing a status report to
     ///     stdout. A value of zero means no reports should be printed.
-    /// * `desired_error` - The desired `fann_get_MSE` or `fann_get_bit_fail`, depending on which
-    ///     stop function is chosen by `fann_set_train_stop_function`.
+    /// * `desired_error`           - The desired `fann_get_MSE` or `fann_get_bit_fail`, depending
+    ///     on which stop function is chosen by `fann_set_train_stop_function`.
     ///
     /// Instead of printing out reports every neurons_between_reports, a callback function can be
     /// called (see `fann_set_callback`).
@@ -1786,7 +1794,7 @@ extern "C" {
     /// generated by this array.
     ///
     /// The default activation functions is {`FANN_SIGMOID`, `FANN_SIGMOID_SYMMETRIC`,
-    /// `FANN_GAUSSIAN`, `FANN_GAUSSIAN_SYMMETRIC`, `FANN_ELLIOT`, `FANN_ELLIOT_SYMMETRIC`}
+    /// `FANN_GAUSSIAN`, `FANN_GAUSSIAN_SYMMETRIC`, `FANN_ELLIOTT`, `FANN_ELLIOTT_SYMMETRIC`}
     ///
     /// # See also
     /// `fann_get_cascade_activation_functions_count`, `fann_set_cascade_activation_functions`,
@@ -1873,7 +1881,7 @@ extern "C" {
     pub fn fann_set_cascade_num_candidate_groups(ann: *mut fann,
                                                  cascade_num_candidate_groups: c_uint);
 
-    /// Constructs a backpropagation neural network from a configuration file, which have been saved
+    /// Constructs a backpropagation neural network from a configuration file, which has been saved
     /// by `fann_save`.
     ///
     /// # See also
@@ -1889,9 +1897,9 @@ extern "C" {
     /// parameters associated with the neural network.
     ///
     /// These three parameters (`fann_set_callback`, `fann_set_error_log`,
-    /// `fann_set_user_data`) are *NOT* saved  to the file because they cannot safely be
+    /// `fann_set_user_data`) are *NOT* saved to the file because they cannot safely be
     /// ported to a different location. Also temporary parameters generated during training
-    /// like `fann_get_MSE` is not saved.
+    /// like `fann_get_MSE` are not saved.
     ///
     /// # Return
     /// The function returns 0 on success and -1 on failure.
@@ -1915,14 +1923,12 @@ extern "C" {
     /// A high value indicates high precision, and a low value indicates low
     /// precision.
     ///
-    /// A negative value indicates very low precision, and a very
-    /// strong possibility for overflow.
-    /// (the actual fix point will be set to 0, since a negative
-    /// fix point does not make sense).
+    /// A negative value indicates very low precision, and a very strong possibility for overflow.
+    /// (the actual fix point will be set to 0, since a negative fix point does not make sense).
     ///
     /// Generally, a fix point lower than 6 is bad, and should be avoided.
-    /// The best way to avoid this, is to have less connections to each neuron,
-    /// or just less neurons in each layer.
+    /// The best way to avoid this is to have fewer connections to each neuron,
+    /// or just fewer neurons in each layer.
     ///
     /// The fixed point use of this network is only intended for use on machines that
     /// have no floating point processor, like an iPAQ. On normal computers the floating
@@ -1940,24 +1946,24 @@ extern "C" {
     /// and this bias neuron will be connected to all neurons in the next layer.
     /// When running the network, the bias nodes always emits 1.
     ///
-    /// To destroy a fann use the fann_destroy function.
+    /// To destroy a `fann` use the `fann_destroy` function.
     ///
     /// # Parameters
     ///
     /// * `num_layers` - The total number of layers including the input and the output layer.
-    /// * `...` - Integer values determining the number of neurons in each layer starting with the
-    /// input layer and ending with the output layer.
+    /// * `...`        - Integer values determining the number of neurons in each layer starting
+    ///     with the input layer and ending with the output layer.
     ///
     /// # Returns
     ///
-    /// A pointer to the newly created fann.
+    /// A pointer to the newly created `fann`.
     ///
     /// # Example
     ///
-    /// Creating an ANN with 2 input neurons, 1 output neuron,
-    /// and two hidden layers with 8 and 9 neurons
     ///
     /// ```
+    /// // Creating an ANN with 2 input neurons, 1 output neuron,
+    /// // and two hidden layers with 8 and 9 neurons
     /// unsafe {
     ///     let ann = fann_sys::fann_create_standard(4, 2, 8, 9, 1);
     /// }
@@ -1992,11 +1998,11 @@ extern "C" {
     ///
     /// * `connection_rate` - The connection rate controls how many connections there will be in the
     ///     network. If the connection rate is set to 1, the network will be fully
-    ///     connected, but if it is set to 0.5 only half of the connections will be set.
+    ///     connected, but if it is set to 0.5, only half of the connections will be set.
     ///     A connection rate of 1 will yield the same result as `fann_create_standard`.
-    /// * `num_layers` - The total number of layers including the input and the output layer.
-    /// * `...` - Integer values determining the number of neurons in each layer starting with the
-    ///     input layer and ending with the output layer.
+    /// * `num_layers`      - The total number of layers including the input and the output layer.
+    /// * `...`             - Integer values determining the number of neurons in each layer
+    ///     starting with the input layer and ending with the output layer.
     ///
     /// # Returns
     /// A pointer to the newly created `fann`.
@@ -2024,7 +2030,7 @@ extern "C" {
     /// also has shortcut connections.
     ///
     /// Shortcut connections are connections that skip layers. A fully connected network with
-    /// shortcut connections, is a network where all neurons are connected to all neurons in later
+    /// shortcut connections is a network where all neurons are connected to all neurons in later
     /// layers. Including direct connections from the input layer to the output layer.
     ///
     /// See `fann_create_standard` for a description of the parameters.
@@ -2046,21 +2052,21 @@ extern "C" {
     /// This function appears in FANN >= 2.0.0.
     pub fn fann_create_shortcut_array(num_layers: c_uint, layers: *const c_uint) -> *mut fann;
 
-    /// Destroys the entire network and properly freeing all the associated memory.
+    /// Destroys the entire network, properly freeing all the associated memory.
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_destroy(ann: *mut fann);
 
-    ///    Will run input through the neural network, returning an array of outputs, the number of
-    ///    which being equal to the number of neurons in the output layer.
+    /// Runs input through the neural network, returning an array of outputs, the number of
+    /// which being equal to the number of neurons in the output layer.
     ///
     /// # See also
-    ///    `fann_test`
+    /// `fann_test`
     ///
     /// This function appears in FANN >= 1.0.0.
     pub fn fann_run(ann: *mut fann, input: *const fann_type) -> *mut fann_type;
 
-    /// Give each connection a random weight between `min_weight` and `max_weight`
+    /// Give each connection a random weight between `min_weight` and `max_weight`.
     ///
     /// From the beginning the weights are random between -0.1 and 0.1.
     ///
@@ -2072,14 +2078,14 @@ extern "C" {
 
     /// Initialize the weights using Widrow + Nguyen's algorithm.
     ///
-    /// This function behaves similarly to fann_randomize_weights. It will use the algorithm
+    /// This function behaves similarly to `fann_randomize_weights`. It will use the algorithm
     /// developed by Derrick Nguyen and Bernard Widrow to set the weights in such a way
     /// as to speed up training. This technique is not always successful, and in some cases can be
     /// less efficient than a purely random initialization.
     ///
     /// The algorithm requires access to the range of the input data (ie, largest and smallest
-    /// input), and therefore accepts a second argument, data, which is the training data that will
-    /// be used to train the network.
+    /// input), and therefore accepts a second argument, `data`, which is the training data that
+    /// will be used to train the network.
     ///
     /// # See also
     /// `fann_randomize_weights`, `fann_read_train_from_file`
@@ -2087,10 +2093,11 @@ extern "C" {
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_init_weights(ann: *mut fann, train_data: *mut fann_train_data);
 
-    /// Will print the connections of the ann in a compact matrix, for easy viewing of the internals
-    /// of the ann.
+    /// Prints the connections of the ann in a compact matrix, for easy viewing of the internals
+    /// of the ANN.
     ///
-    /// The output from fann_print_connections on a small (2 2 1) network trained on the xor problem
+    /// The output from `fann_print_connections` on a small (2 2 1) network trained on the xor
+    /// problem:
     ///
     /// ```text
     /// Layer / Neuron 012345
@@ -2101,15 +2108,15 @@ extern "C" {
     /// L   2 / N    7 ......
     /// ```
     ///
-    /// This network have five real neurons and two bias neurons. This gives a total of seven
+    /// This network has five real neurons and two bias neurons. This gives a total of seven
     /// neurons named from 0 to 6. The connections between these neurons can be seen in the matrix.
     /// "." is a place where there is no connection, while a character tells how strong the
     /// connection is on a scale from a-z. The two real neurons in the hidden layer (neuron 3 and 4
-    /// in layer 1) has connection from the three neurons in the previous layer as is visible in the
-    /// first two lines. The output neuron (6) has connections form the three neurons in the hidden
-    /// layer 3 - 5 as is visible in the fourth line.
+    /// in layer 1) have connections from the three neurons in the previous layer as is visible in
+    /// the first two lines. The output neuron 6 has connections from the three neurons in the
+    /// hidden layer 3 - 5 as is visible in the fourth line.
     ///
-    /// To simplify the matrix output neurons is not visible as neurons that connections can come
+    /// To simplify the matrix output neurons are not visible as neurons that connections can come
     /// from, and input and bias neurons are not visible as neurons that connections can go to.
     ///
     /// This function appears in FANN >= 1.2.0.
@@ -2175,6 +2182,7 @@ extern "C" {
     /// * `ann` - A previously created neural network structure of type `fann` pointer.
     ///
     /// # Returns
+    ///
     /// The number of layers in the neural network
     ///
     /// # Example
@@ -2192,7 +2200,7 @@ extern "C" {
 
     /// Get the number of neurons in each layer in the network.
     ///
-    /// Bias is not included so the layers match the fann_create functions.
+    /// Bias is not included so the layers match the `fann_create` functions.
     ///
     /// # Parameters
     ///
@@ -2255,22 +2263,21 @@ extern "C" {
     pub fn fann_set_weight(ann: *mut fann, from_neuron: c_uint,
                            to_neuron: c_uint, weight: fann_type);
 
-    /// Store a pointer to user defined data. The pointer can be
-    /// retrieved with `fann_get_user_data` for example in a
-    /// callback. It is the user's responsibility to allocate and
-    /// deallocate any data that the pointer might point to.
+    /// Store a pointer to user defined data. The pointer can be retrieved with `fann_get_user_data`
+    /// for example in a callback. It is the user's responsibility to allocate and deallocate any
+    /// data that the pointer might point to.
     ///
     /// # Parameters
     ///
-    /// * `ann` - A previously created neural network structure of type `fann` pointer.
+    /// * `ann`       - A previously created neural network structure of type `fann` pointer.
     /// * `user_data` - A void pointer to user defined data.
     ///
     /// This function appears in FANN >= 2.1.0.
     pub fn fann_set_user_data(ann: *mut fann, user_data: *mut c_void);
 
-    /// Get a pointer to user defined data that was previously set
-    /// with `fann_set_user_data`. It is the user's responsibility to
-    /// allocate and deallocate any data that the pointer might point to.
+    /// Get a pointer to user defined data that was previously set with `fann_set_user_data`. It is
+    /// the user's responsibility to allocate and deallocate any data that the pointer might point
+    /// to.
     ///
     /// # Parameters
     ///
@@ -2294,8 +2301,10 @@ mod tests {
 
     #[test]
     fn test_tutorial_example() {
-        let c_train_file = CString::new(&b"test_files/xor.data"[..]).unwrap();
-        let c_save_file = CString::new(&b"test_files/xor_float.net"[..]).unwrap();
+        let c_trainfile = CString::new(&b"test_files/xor.data"[..]).unwrap();
+        let p_trainfile = c_trainfile.as_ptr();
+        let c_savefile = CString::new(&b"test_files/xor_float.net"[..]).unwrap();
+        let p_savefile = c_savefile.as_ptr();
         // Train an ANN with a data set and then save the ANN to a file.
         let num_input = 2;
         let num_output = 1;
@@ -2308,14 +2317,13 @@ mod tests {
             let ann = fann_create_standard(num_layers, num_input, num_neurons_hidden, num_output);
             fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
             fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
-            fann_train_on_file(
-                ann, c_train_file.as_ptr(), max_epochs, epochs_between_reports, desired_error);
-            fann_save(ann, c_save_file.as_ptr());
+            fann_train_on_file(ann, p_trainfile, max_epochs, epochs_between_reports, desired_error);
+            fann_save(ann, p_savefile);
             fann_destroy(ann);
         }
         // Load the ANN and execute input.
         unsafe {
-            let ann = fann_create_from_file(c_save_file.as_ptr());
+            let ann = fann_create_from_file(p_savefile);
             assert!(EPSILON > ( 1.0 - *fann_run(ann, [-1.0,  1.0].as_ptr())).abs());
             assert!(EPSILON > ( 1.0 - *fann_run(ann, [ 1.0, -1.0].as_ptr())).abs());
             assert!(EPSILON > (-1.0 - *fann_run(ann, [ 1.0,  1.0].as_ptr())).abs());
@@ -2323,6 +2331,6 @@ mod tests {
             fann_destroy(ann);
         }
         // Delete the ANN file created by the test.
-        remove_file(from_utf8(c_save_file.to_bytes()).unwrap()).unwrap();
+        remove_file(from_utf8(c_savefile.to_bytes()).unwrap()).unwrap();
     }
 }
