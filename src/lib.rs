@@ -609,10 +609,11 @@ extern "C" {
     ///
     /// # Parameters
     ///
-    /// * `ann` - The neural network structure
-    /// * `input` - an array of inputs. This array must be exactly `fann_get_num_input` long.
+    /// * `ann`            - The neural network structure
+    /// * `input`          - an array of inputs. This array must be exactly `fann_get_num_input`
+    ///                      long.
     /// * `desired_output` - an array of desired outputs. This array must be exactly
-    ///     `fann_get_num_output` long.
+    ///                      `fann_get_num_output` long.
     ///
     /// # See also
     /// `fann_train_on_data`, `fann_train_epoch`
@@ -726,7 +727,7 @@ extern "C" {
     /// This function appears in FANN >= 1.2.0.
     pub fn fann_train_epoch(ann: *mut fann, data: *const fann_train_data) -> c_float;
 
-    /// Test a set of training data and calculates the MSE for the training data.
+    /// Tests a set of training data and calculates the MSE for the training data.
     ///
     /// This function updates the MSE and the bit fail values.
     ///
@@ -1944,7 +1945,7 @@ extern "C" {
     ///
     /// There will be a bias neuron in each layer (except the output layer),
     /// and this bias neuron will be connected to all neurons in the next layer.
-    /// When running the network, the bias nodes always emits 1.
+    /// When running the network, the bias nodes always emit 1.
     ///
     /// To destroy a `fann` use the `fann_destroy` function.
     ///
@@ -1979,7 +1980,7 @@ extern "C" {
     ///
     /// ```
     /// // Creating an ANN with 2 input neurons, 1 output neuron,
-    /// // and two hidden neurons with 8 and 9 neurons
+    /// // and two hidden layers with 8 and 9 neurons
     /// let layers = [2, 8, 9, 1];
     /// unsafe {
     ///     let ann = fann_sys::fann_create_standard_array(4, layers.as_ptr());
@@ -2059,6 +2060,9 @@ extern "C" {
 
     /// Runs input through the neural network, returning an array of outputs, the number of
     /// which being equal to the number of neurons in the output layer.
+    ///
+    /// Ownership of the output array remains with the `fann` structure. It may be overwritten by
+    /// subsequent function calls. Do not deallocate it!
     ///
     /// # See also
     /// `fann_test`
@@ -2303,7 +2307,7 @@ mod tests {
     fn test_tutorial_example() {
         let c_trainfile = CString::new(&b"test_files/xor.data"[..]).unwrap();
         let p_trainfile = c_trainfile.as_ptr();
-        let c_savefile = CString::new(&b"test_files/xor_float.net"[..]).unwrap();
+        let c_savefile = CString::new(&b"test_files/xor.net"[..]).unwrap();
         let p_savefile = c_savefile.as_ptr();
         // Train an ANN with a data set and then save the ANN to a file.
         let num_input = 2;
