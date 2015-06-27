@@ -164,7 +164,7 @@ pub enum fann_train_enum {
     /// training algorithm works. The RPROP training algorithm is described by
     /// [Riedmiller and Braun, 1993], but the actual learning algorithm used here is the
     /// iRPROP- training algorithm which is described by [Igel and Husken, 2000] which
-    /// is an variety of the standard RPROP training algorithm.
+    /// is a variant of the standard RPROP training algorithm.
     FANN_TRAIN_RPROP,
     /// A more advanced batch training algorithm which achieves good results
     /// for many problems. The quickprop training algorithm uses the `learning_rate` parameter
@@ -195,6 +195,8 @@ pub enum fann_train_enum {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_activationfunc_enum {
+    /// Neuron does not exist or does not have an activation function.
+    FANN_NONE = -1,
     /// Linear activation function.
     ///
     /// * span: -inf < y < inf
@@ -350,7 +352,7 @@ pub enum fann_stopfunc_enum {
     FANN_STOPFUNC_MSE = 0,
     /// Stop criterion is number of bits that fail. The number of bits means the
     /// number of output neurons which differ more than the bit fail limit
-    /// (see fann_get_bit_fail_limit, fann_set_bit_fail_limit).
+    /// (see `fann_get_bit_fail_limit`, `fann_set_bit_fail_limit`).
     /// The bits are counted in all of the training data, so this number can be higher than
     /// the number of training data.
     FANN_STOPFUNC_BIT,
@@ -1131,8 +1133,8 @@ extern "C" {
     ///
     /// # Returns
     ///
-    /// The activation function for the neuron or -1 if the neuron is not defined in the neural
-    /// network.
+    /// The activation function for the neuron or `FANN_NONE` if the neuron is not defined in the
+    /// neural network.
     ///
     /// # See also
     /// `fann_set_activation_function_layer`, `fann_set_activation_function_hidden`,
