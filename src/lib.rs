@@ -788,7 +788,7 @@ extern "C" {
     pub fn fann_create_train_from_callback(num_data: c_uint, num_input: c_uint, num_output: c_uint,
         user_function: Option<extern "C" fn(num: c_uint, num_input: c_uint, num_output: c_uint,
                                             input: *mut fann_type, output: *mut fann_type)>)
-        -> *const fann_train_data;
+        -> *mut fann_train_data;
 
     /// Destructs the training data and properly deallocates all of the associated data.
     /// Be sure to call this function when finished using the training data.
