@@ -9,3 +9,21 @@ Low-level [Rust](http://www.rust-lang.org/) bindings to the
 top of these.
 
 [Documentation](https://afck.github.io/docs/fann-sys-rs/fann_sys)
+
+
+## Usage
+
+Add `fann-sys` and `libc` to the list of dependencies in your `Cargo.toml`:
+
+```toml
+[dependencies]
+fann-sys = "*"
+libc = "*"
+```
+
+and this to your crate root:
+
+```rust
+extern crate fann;
+extern crate libc;
+```
