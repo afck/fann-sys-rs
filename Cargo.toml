@@ -11,5 +11,9 @@ Low-level bindings to the Fast Artificial Neural Networks library
 """
 keywords = ["neural", "network", "fann", "classifier", "backpropagation"]
 
+[features]
+# Use double precision.
+double = []
+
 [dependencies]
 libc = "0.1.8"

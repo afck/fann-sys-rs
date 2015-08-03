@@ -84,16 +84,21 @@ pub use fann_nettype_enum::*;
 use libc::types::common::c95::FILE;
 use libc::{c_char, c_float, c_int, c_uint, c_void};
 
+#[cfg(feature = "double")]
+type fann_type_internal = libc::c_double;
+#[cfg(not(feature = "double"))]
+type fann_type_internal = c_float;
+
 /// `fann_type` is the type used for the weights, inputs and outputs of the neural network. In
-/// the Rust bindings, it is currently always defined as `c_float`.
+/// the Rust bindings, it defined as `c_float` by default, and as `c_double`, if the `double`
+/// feature is configured.
 ///
 /// In the FANN C library, `fann_type` is defined as a:
 ///
-/// * `float` - if you include fann.h or floatfann.h
+/// * `float`  - if you include fann.h or floatfann.h
 /// * `double` - if you include doublefann.h
-/// * `int` - if you include fixedfann.h (please be aware that fixed point usage is
-///           only to be used during execution, and not during training).
-pub type fann_type = c_float;
+/// * `int`    - if you include fixedfann.h (only for executing a network, not training).
+pub type fann_type = fann_type_internal;
 
 /// Error events on fann and fann_train_data.
 #[repr(C)]
@@ -555,7 +560,8 @@ pub struct fann_train_data {
     output: *mut *mut fann_type,
 }
 
-#[link(name = "fann")]
+#[cfg_attr(not(feature = "double"), link(name = "fann"))]
+#[cfg_attr(feature = "double", link(name = "doublefann"))]
 extern "C" {
     pub static mut fann_default_error_log: *mut FILE;
 
@@ -2305,7 +2311,7 @@ mod tests {
     use std::fs::remove_file;
     use std::str::from_utf8;
 
-    const EPSILON: f32 = 0.2;
+    const EPSILON: fann_type = 0.2;
 
     #[test]
     fn test_tutorial_example() {
