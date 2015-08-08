@@ -89,11 +89,10 @@ type fann_type_internal = libc::c_double;
 #[cfg(not(feature = "double"))]
 type fann_type_internal = c_float;
 
-/// `fann_type` is the type used for the weights, inputs and outputs of the neural network. In
-/// the Rust bindings, it defined as `c_float` by default, and as `c_double`, if the `double`
-/// feature is configured.
+/// The type of weights, inputs and outputs in a neural network. In the Rust bindings, it is
+/// defined as `c_float` by default, and as `c_double`, if the `double` feature is configured.
 ///
-/// In the FANN C library, `fann_type` is defined as a:
+/// In the FANN C library, `fann_type` is defined as:
 ///
 /// * `float`  - if you include fann.h or floatfann.h
 /// * `double` - if you include doublefann.h
