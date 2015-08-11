@@ -1,7 +1,7 @@
 # fann-sys-rs
 
 [![Build Status](https://travis-ci.org/afck/fann-sys-rs.svg?branch=master)](https://travis-ci.org/afck/fann-sys-rs)
-[![Crates.io](https://img.shields.io/crates/v/fann-sys.svg?style=flat-square)](https://crates.io/crates/fann-sys)
+[![Crates.io](http://meritbadge.herokuapp.com/fann-sys)](https://crates.io/crates/fann-sys)
 
 Low-level [Rust](http://www.rust-lang.org/) bindings to the
 [Fast Artificial Neural Networks](http://leenissen.dk/fann/wp/) library. The
