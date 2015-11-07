@@ -1,6 +1,6 @@
 [package]
 name = "fann-sys"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Andreas Fackler <AndreasFackler@gmx.de>"]
 license = "LGPL-3.0"
 documentation = "https://afck.github.io/docs/fann-sys-rs/fann_sys"
