@@ -81,7 +81,7 @@ pub use fann_errorfunc_enum::*;
 pub use fann_stopfunc_enum::*;
 pub use fann_nettype_enum::*;
 
-use libc::types::common::c95::FILE;
+use libc::FILE;
 use libc::{c_char, c_float, c_int, c_uint, c_void};
 
 #[cfg(feature = "double")]
