@@ -74,15 +74,15 @@
 
 extern crate libc;
 
-pub use fann_errno_enum::*;
-pub use fann_train_enum::*;
 pub use fann_activationfunc_enum::*;
+pub use fann_errno_enum::*;
 pub use fann_errorfunc_enum::*;
-pub use fann_stopfunc_enum::*;
 pub use fann_nettype_enum::*;
+pub use fann_stopfunc_enum::*;
+pub use fann_train_enum::*;
+use libc::{c_char, c_float, c_int, c_uint, c_void};
 
 use libc::FILE;
-use libc::{c_char, c_float, c_int, c_uint, c_void};
 
 #[cfg(feature = "double")]
 type fann_type_internal = libc::c_double;
@@ -99,7 +99,7 @@ type fann_type_internal = c_float;
 /// * `int`    - if you include fixedfann.h (only for executing a network, not training).
 pub type fann_type = fann_type_internal;
 
-/// Error events on fann and fann_train_data.
+/// Error events on `fann` and `fann_train_data`.
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub enum fann_errno_enum {
@@ -414,7 +414,7 @@ pub type fann_callback_type = Option<extern "C" fn(ann: *mut fann,
                                                    epochs_between_reports: c_uint,
                                                    desired_error: c_float,
                                                    epochs: c_uint)
-                                     -> c_int>;
+                                                   -> c_int>;
 
 #[repr(C)]
 struct fann_neuron {
@@ -561,7 +561,7 @@ pub struct fann_train_data {
 
 #[cfg_attr(not(feature = "double"), link(name = "fann"))]
 #[cfg_attr(feature = "double", link(name = "doublefann"))]
-extern {
+extern "C" {
     pub static mut fann_default_error_log: *mut FILE;
 
     /// Change where errors are logged to. Both `fann` and `fann_data` can be
@@ -1826,7 +1826,8 @@ extern {
     /// `fann_activationfunc_enum`
     ///
     /// This function appears in FANN >= 2.0.0.
-    pub fn fann_get_cascade_activation_functions(ann: *const fann) -> *mut fann_activationfunc_enum;
+    pub fn fann_get_cascade_activation_functions(ann: *const fann)
+                                                 -> *mut fann_activationfunc_enum;
 
     /// Sets the array of cascade candidate activation functions. The array must be just as long
     /// as defined by the count.
