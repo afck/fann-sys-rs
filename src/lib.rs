@@ -614,6 +614,11 @@ extern "C" {
     /// This function appears in FANN >= 1.1.0.
     pub fn fann_print_error(errdat: *mut fann_error);
 
+    /// Creates a copy of a fann structure.
+    /// Data in the user data <fann_set_user_data> is not copied, but the user data pointer is copied.
+    /// This function appears in FANN >= 2.2.0.
+    pub fn fann_copy(orig: *const fann) -> *mut fann;
+
     /// Train one iteration with a set of inputs, and a set of desired outputs.
     /// This training is always incremental training (see `fann_train_enum`), since
     /// only one pattern is presented.
