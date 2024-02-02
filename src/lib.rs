@@ -615,7 +615,8 @@ extern "C" {
     pub fn fann_print_error(errdat: *mut fann_error);
 
     /// Creates a copy of a fann structure.
-    /// Data in the user data <fann_set_user_data> is not copied, but the user data pointer is copied.
+    ///
+    /// Data in the user data `fann_set_user_data` is not copied, but the user data pointer is copied.
     /// This function appears in FANN >= 2.2.0.
     pub fn fann_copy(orig: *const fann) -> *mut fann;
 
